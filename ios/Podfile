@@ -12,6 +12,16 @@ target 'Clowdr' do
     :hermes_enabled => false
   )
 
+  pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
+
+  pod 'react-native-sensitive-info', :path => '../node_modules/react-native-sensitive-info'
+
+  pod 'react-native-config', :path => '../node_modules/react-native-config'
+
+  pod 'react-native-restart', :path => '../node_modules/react-native-restart'
+
+  pod 'react-native-safe-area-context', :path => '../node_modules/react-native-safe-area-context'
+
   target 'ClowdrTests' do
     inherit! :complete
     # Pods for testing
