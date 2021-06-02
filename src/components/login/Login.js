@@ -1,144 +1,109 @@
  // Login.js
  import React, { Component } from "react";
- import { View, Text, Button, ActivityIndicator } from "react-native";
- import { useNavigation } from '@react-navigation/native';
+ import { View, Text, Button, ActivityIndicator, AsyncStorage } from "react-native";
 
-
-//  import { NavigationActions, StackActions } from "react-navigation";
  import Auth0 from "react-native-auth0";
  import Config from "react-native-config";
- import DeviceInfo from "react-native-device-info";
- import SInfo from "react-native-sensitive-info";
  import RNRestart from "react-native-restart";
 
- import {
-    headerColorStyle,
-    headerTextColorStyle,
-    buttonStyle
-  } from "../../styles/Colors";
-  import styles from "../../styles/Login";
+import styles from "../../styles/Login";
 
   const auth0 = new Auth0({
     domain: Config.AUTH0_DOMAIN,
     clientId: Config.AUTH0_CLIENT_ID
   });
-
   
-  
+  const ACCESS_TOKEN = "@accessToken"
+  const REFRESH_TOKEN = "@refreshToken"
+  const HOME_SCREEN = "Home"
 
   export default class Login extends Component {
-    
-    // static navigationOptions = ({ navigation }) => {
-    //   return {
-    //     headerTitle: "Login", // the title to display in the header
-    //     headerStyle: { // style of the headers body
-    //       backgroundColor: headerColorStyle
-    //     },
-    //     headerTitleStyle: { // style of the header text
-    //       color: headerTextColorStyle
-    //     }
-    //   };
-    // };
 
     state = {
-        hasInitialized: true
+        hasInitialized: false
       };
 
-    componentDidMount() {
-        // SInfo.getItem("accessToken", {}).then(accessToken => {
-        //   if (accessToken) {
-        //     auth0.auth
-        //          .userInfo({ token: accessToken })
-        //          .then(data => {
-        //            alert(accessToken)
-        //              this.gotoHomeScreen()
-        //         })
-        //         .catch(err => {
-        //         // next: add code for dealing with invalid access token
-        //         });
-        //   } else {
-        //     SInfo.getItem("refreshToken", {}).then(refreshToken => { // get the refresh token from the secure storage
-        //         // request for a new access token using the refresh token 
-        //         auth0.auth
-        //           .refreshToken({ refreshToken: refreshToken })
-        //           .then(newAccessToken => {
-        //             SInfo.setItem("accessToken", newAccessToken);
-        //             RNRestart.Restart();
-        //           })
-        //           .catch(accessTokenErr => {
-        //             console.log("error getting new access token: ", accessTokenErr);
-        //           });
-        //       });
-        //     this.setState({
-        //       hasInitialized: true
-        //     });
-        //   }
-        // });
+     componentDidMount() {
+      const accessToken =  AsyncStorage.getItem("accessToken").then(accessToken => {
+        if (accessToken) {
+          auth0.auth
+               .userInfo({ token: accessToken })
+               .then(data => {
+                  console.log("Token found")
+                  this.gotoHomeScreen()
+              })
+              .catch(err => {
+                this.setState({
+                  hasInitialized: true
+                });
+                console.log("**********LOGIN*********")
+                console.log("Could not find access token")
+                console.log("**********LOGIN*********")
+              });
+        } else {
+          const refreshToken = AsyncStorage.getItem("refreshToken")
+          console.log("Refresh token fetching"+ refreshToken)
+                  auth0.auth
+                    .refreshToken({ refreshToken: refreshToken })
+                    .then(newAccessToken => {
+                      this.saveData(ACCESS_TOKEN, newAccessToken);
+                      RNRestart.Restart();
+                    })
+                    .catch(accessTokenErr => {
+                      console.log("error getting new access token: ", accessTokenErr);
+                    });
+              this.setState({
+                hasInitialized: true
+              });
+          }
+        })
       }
+    
 
-      // const auth0 = new Auth0({ domain: 'dev-jjrbfhx5.us.auth0.com', clientId: 'CdIkhbvmgD4KlQgWmSyqiemdQAbOiP6Z' });
+    saveData = async(key, value) => {
+      console.log("Key :" +key+" , value: "+value)
+      await AsyncStorage.setItem(key,value)
+      // const toek = AsyncStorage.getItem(key) 
+      // console.log("It got saved? "+toek)
+    }
+
     login = () => {
-      // alert("hi")
-      // this.gotoHomeScreen()
 
       auth0
       .webAuth
-      .authorize({scope: 'openid profile email'})
+      .authorize({
+        scope: Config.AUTHO_SCOPE,
+        audience: Config.AUTH0_AUDIENCE,
+        prompt: "login" 
+      })
       .then(credentials =>
-      // Successfully authenticated
-      // Store the accessToken
       {
-        console.log(credentials)
-        console.log(credentials.accessToken)
-        alert("Success")
-            this.gotoHomeScreen()
-            SInfo.setItem("accessToken", res.accessToken, {});
-            SInfo.setItem("refreshToken", res.refreshToken, {});
-          }
-      
-    )
-    .catch(error => console.log(error));
-
-      // alert("hi")
-      // alert(Config.AUTH0_DOMAIN +Config.AUTH0_CLIENT_ID)
-        // auth0.webAuth
-        //   .authorize({
-        //     scope: Config.AUTHO_SCOPE,
-        //     audience: Config.AUTH0_AUDIENCE,
-        //     // device: //DeviceInfo.getUniqueID(),
-        //     prompt: "login" 
-        //   })
-        //   .then(res => {
-        //     alert("Success")
-        //     this.gotoHomeScreen()
-        //     SInfo.setItem("accessToken", res.accessToken, {});
-        //     SInfo.setItem("refreshToken", res.refreshToken, {});
-            
-        //   })
-        //   .catch(error => {
-        //     console.log("error occurred while trying to authenticate: ", error);
-        //   });
-      };
+          this.saveData(ACCESS_TOKEN, credentials.accessToken).then()
+          this.saveData(REFRESH_TOKEN, credentials.refreshToken).then()
+          this.gotoHomeScreen()
+      }).catch(error => console.log(error));
+    };
     
     gotoHomeScreen = data => {
-        this.setState({
-          hasInitialized: true
-        });
-        this.props.navigation.navigate('Home')
-        this.props.navigation.reset({
-          index: 0,
-          routes: [{name: "Home"}]
-        })
+      this.setState({
+        hasInitialized: false
+      });
+      this.props.navigation.reset({
+        index: 0,
+        routes: [{name: HOME_SCREEN}]
+      })
+        this.props.navigation.navigate(HOME_SCREEN)
+        
       };
 
     render() {
         return (
           <View style={styles.container}>
-            <ActivityIndicator
+            {/* <ActivityIndicator
               size="large"
               color="#05a5d1"
               animating={!this.state.hasInitialized}
-            />
+            /> */}
             
             {this.state.hasInitialized && (
               <Button onPress={this.login} title="Login" />  

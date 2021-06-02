@@ -1,6 +1,6 @@
  // Home.js
 import React, { Component } from "react";
-import { View, Button } from "react-native";
+import { View, Button, AsyncStorage } from "react-native";
 // import { NavigationActions, StackActions } from "react-navigation";
 
 import Auth0 from "react-native-auth0";
@@ -12,6 +12,11 @@ const auth0 = new Auth0({
     clientId: Config.AUTH0_CLIENT_ID
 });
 
+const ACCESS_TOKEN = "@accessToken"
+const REFRESH_TOKEN = "@refreshToken"
+const HOME_SCREEN = "Home"
+const LOGIN_SCREEN = "Login"
+
 import {
     headerColorStyle,
     headerTextColorStyle,
@@ -20,45 +25,57 @@ import {
 import styles from "../styles/Home";
 
 export default class Home extends Component {
-    static navigationOptions = ({ navigation }) => {
-        return {
-          headerTitle: "Home",
-          headerStyle: {
-            backgroundColor: headerColorStyle
-          },
-          headerTitleStyle: {
-            color: headerTextColorStyle
-          }
-        };
+
+  componentDidMount () {
+    // this.props.navigation.setParams({logoutAction: {() => this.logout()}})
+  }
+  
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state
+      return {
+        headerRight: (<Button onPress={() => params.logoutAction } title="Logout"/>),
+        headerTitle: "Home",
+        headerStyle: {
+          backgroundColor: headerColorStyle
+        },
+        headerTitleStyle: {
+          color: headerTextColorStyle
+        }
       };
-
-    logout = () => {
-        SInfo.deleteItem("accessToken", {});
-        SInfo.deleteItem("refreshToken", {});
-
-        auth0.webAuth
-            .clearSession()
-            .then(res => {
-            console.log("clear session ok");
-            })
-            .catch(err => {
-            console.log("error clearing session: ", err);
-            });
-
-        this.gotoLoginScreen(); 
     };
 
-    gotoLogin = () => {
-        // const resetAction = StackActions.reset({
-        //   index: 0,
-        //   actions: [
-        //     NavigationActions.navigate({
-        //       routeName: "Login"
-        //     })
-        //   ]
-        // });
-  
-        // this.props.navigation.dispatch(resetAction);
+    deleteLocalCache = async(key) => {
+      await AsyncStorage.removeItem(key)
+    }
+
+    logout = () => {
+      this.deleteLocalCache(ACCESS_TOKEN)
+      .then(this.deleteLocalCache(REFRESH_TOKEN).then(() =>{
+        auth0.webAuth
+        .clearSession()
+        .then(res => {
+        console.log("clear session ok");
+        })
+        .catch(err => {
+        console.log("error clearing session: ", err);
+        });
+
+    this.gotoLoginScreen(); 
+      }))
+        // SInfo.deleteItem("accessToken", {});
+        // SInfo.deleteItem("refreshToken", {});
+
+
+    };
+
+    gotoLoginScreen = () => {
+        
+        this.props.navigation.reset({
+          index: 0,
+          routes: [{name: LOGIN_SCREEN}]
+        })
+        
+        this.props.navigation.navigate(LOGIN_SCREEN)
       };
 
     render() {
