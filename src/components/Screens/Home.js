@@ -18,9 +18,8 @@ import {
     headerColorStyle,
     headerTextColorStyle,
     buttonStyle
-} from "../styles/Colors";
-import styles from "../styles/Home";
-import TabNavigator from "./TabNavigator";
+} from "../../styles/Colors";
+import styles from "../../styles/Home";
 
 export default class Home extends Component {
 
@@ -30,6 +29,7 @@ export default class Home extends Component {
 
   setNavigationBarStyle = () => {
     this.props.navigation.setOptions({
+      headerLeft: ()=> null,
       headerRight: () => (<Button onPress={this.logout} title="Logout"/>),
       headerTitle: "Home",
       headerStyle: {

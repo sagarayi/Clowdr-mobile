@@ -18,6 +18,7 @@ import styles from "../../styles/Login";
   const REFRESH_TOKEN = "@refreshToken"
   const HOME_SCREEN = "Home"
   const TAB_NAV_SCREEN = "TabNav"
+  const MY_CONF_SCREEN = "MyConf"
 
   export default class Login extends Component {
 
@@ -93,9 +94,9 @@ import styles from "../../styles/Login";
       // });
       this.props.navigation.reset({
         index: 0,
-        routes: [{name: TAB_NAV_SCREEN}]
+        routes: [{name: MY_CONF_SCREEN}]
       })
-        this.props.navigation.navigate(TAB_NAV_SCREEN)
+        this.props.navigation.navigate(MY_CONF_SCREEN)
         
       };
 

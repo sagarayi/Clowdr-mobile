@@ -1,16 +1,6 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
-import StackNavigator from './src/components/StackNavigator';
-
-import Root from "./src/components/StackNavigator";
+import StackNavigator from './src/components/Navigators/StackNavigator';
 
 export default class App extends Component {  
 
