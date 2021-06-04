@@ -12,7 +12,6 @@ const auth0 = new Auth0({
 
 const ACCESS_TOKEN = "@accessToken"
 const REFRESH_TOKEN = "@refreshToken"
-const HOME_SCREEN = "Home"
 const LOGIN_SCREEN = "Login"
 
 import {
@@ -21,6 +20,7 @@ import {
     buttonStyle
 } from "../styles/Colors";
 import styles from "../styles/Home";
+import TabNavigator from "./TabNavigator";
 
 export default class Home extends Component {
 
@@ -75,6 +75,7 @@ export default class Home extends Component {
 
         return (
             <View style={styles.container}>
+              {/* <TabNavigator/> */}
             </View>
         );
     }
