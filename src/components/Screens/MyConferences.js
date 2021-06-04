@@ -1,18 +1,78 @@
 //MyConferences.js
 import React, { Component } from "react";
-import { View, Button, AsyncStorage } from "react-native";
+import { View, Button, Alert } from "react-native";
 import AppButton from "../common/AppButton";
 
 
 const TAB_NAV_SCREEN = "TabNav"
+const LOGIN_SCREEN = "Login"
+const ACCESS_TOKEN = "@accessToken"
+const REFRESH_TOKEN = "@refreshToken"
+
 export default class MyConferences extends React.Component {
+
+    componentDidMount () {
+        this.setNavigationBarStyle()
+      }
+    
+    setNavigationBarStyle = () => {
+    this.props.navigation.setOptions({
+        headerLeft: ()=> null,
+        headerRight: () => (<Button onPress={this.logout} title="Logout"/>),
+        headerTitle: "My Conferences",
+    }) 
+    }
+
+    logout = () => {
+    this.deleteLocalCache(ACCESS_TOKEN)
+    .then(this.deleteLocalCache(REFRESH_TOKEN).then(() =>{
+        auth0.webAuth
+        .clearSession()
+        .then(res => {
+        console.log("clear session ok");
+        })
+        .catch(err => {
+        console.log("error clearing session: ", err);
+        });
+
+    this.gotoLoginScreen(); 
+    }))
+    };
+  
+    gotoLoginScreen = () => {
+        
+        this.props.navigation.reset({
+        index: 0,
+        routes: [{name: LOGIN_SCREEN}]
+        })
+
+        this.props.navigation.navigate(LOGIN_SCREEN)
+    };
+
+    deleteLocalCache = async(key) => {
+        await AsyncStorage.removeItem(key)
+      }
 
     navigateToConference(conference) {
         this.props.navigation.navigate(TAB_NAV_SCREEN)
     } 
 
     navigateToJoinConference() {
-        this.props.navigation.navigate(TAB_NAV_SCREEN)
+        Alert.prompt(
+            "Join a conference",
+            "Enter an invite code to join a conference.",
+            [
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+              },
+              {
+                text: "Join",
+                onPress: inviteCode => console.log("Invite code entered: " + inviteCode)
+              }
+            ]
+          );
     }
 
     render() {
