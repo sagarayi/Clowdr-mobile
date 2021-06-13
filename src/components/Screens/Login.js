@@ -28,39 +28,39 @@ import styles from "../../styles/Login";
 
      componentDidMount() {
       // this.gotoHomeScreen()
-      // const accessToken =  AsyncStorage.getItem("accessToken").then(accessToken => {
-        // if (accessToken) {
-        //   auth0.auth
-        //        .userInfo({ token: accessToken })
-        //        .then(data => {
-        //           console.log("Token found")
-        //           this.gotoHomeScreen()
-        //       })
-        //       .catch(err => {
-        //         this.setState({
-        //           hasInitialized: true
-        //         });
-        //         console.log("**********LOGIN*********")
-        //         console.log("Could not find access token")
-        //         console.log("**********LOGIN*********")
-        //       });
-        // } else {
-        //   const refreshToken = AsyncStorage.getItem("refreshToken")
-        //   console.log("Refresh token fetching"+ refreshToken)
-        //           auth0.auth
-        //             .refreshToken({ refreshToken: refreshToken })
-        //             .then(newAccessToken => {
-        //               this.saveData(ACCESS_TOKEN, newAccessToken);
-        //               RNRestart.Restart();
-        //             })
-        //             .catch(accessTokenErr => {
-        //               console.log("error getting new access token: ", accessTokenErr);
-        //             });
+      const accessToken =  AsyncStorage.getItem(ACCESS_TOKEN).then(accessToken => {
+        if (accessToken) {
+          auth0.auth
+               .userInfo({ token: accessToken })
+               .then(data => {
+                  console.log("Token found")
+                  this.gotoHomeScreen()
+              })
+              .catch(err => {
+                this.setState({
+                  hasInitialized: true
+                });
+                console.log("**********LOGIN*********")
+                console.log("Could not find access token")
+                console.log("**********LOGIN*********")
+              });
+        } else {
+          const refreshToken = AsyncStorage.getItem(REFRESH_TOKEN)
+          console.log("Refresh token fetching"+ refreshToken)
+                  auth0.auth
+                    .refreshToken({ refreshToken: refreshToken })
+                    .then(newAccessToken => {
+                      this.saveData(ACCESS_TOKEN, newAccessToken);
+                      RNRestart.Restart();
+                    })
+                    .catch(accessTokenErr => {
+                      console.log("error getting new access token: ", accessTokenErr);
+                    });
               this.setState({
                 hasInitialized: true
               });
-          // }
-        // })
+          }
+        })
       }
     
 
@@ -73,19 +73,19 @@ import styles from "../../styles/Login";
 
     login = () => {
 
-      // auth0
-      // .webAuth
-      // .authorize({
-      //   scope: Config.AUTHO_SCOPE,
-      //   audience: Config.AUTH0_AUDIENCE,
-      //   prompt: "login" 
-      // })
-      // .then(credentials =>
-      // {
-      //     this.saveData(ACCESS_TOKEN, credentials.accessToken).then()
-      //     this.saveData(REFRESH_TOKEN, credentials.refreshToken).then()
+      auth0
+      .webAuth
+      .authorize({
+        scope: Config.AUTHO_SCOPE,
+        audience: Config.AUTH0_AUDIENCE,
+        prompt: "login" 
+      })
+      .then(credentials =>
+      {
+          this.saveData(ACCESS_TOKEN, credentials.accessToken).then()
+          this.saveData(REFRESH_TOKEN, credentials.refreshToken).then()
           this.gotoHomeScreen()
-      // }).catch(error => console.log(error));
+      }).catch(error => console.log(error));
     };
     
     gotoHomeScreen = data => {
