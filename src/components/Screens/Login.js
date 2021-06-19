@@ -6,6 +6,7 @@
  import Config from "react-native-config";
  import RNRestart from "react-native-restart";
  import AppButton from "../common/AppButton"
+ import jwt_decode from "jwt-decode";
 
 import styles from "../../styles/Login";
 
@@ -16,6 +17,7 @@ import styles from "../../styles/Login";
   
   const ACCESS_TOKEN = "@accessToken"
   const REFRESH_TOKEN = "@refreshToken"
+  const USER_ID="@userId"
   const HOME_SCREEN = "Home"
   const TAB_NAV_SCREEN = "TabNav"
   const MY_CONF_SCREEN = "MyConf"
@@ -28,6 +30,7 @@ import styles from "../../styles/Login";
 
      componentDidMount() {
       // this.gotoHomeScreen()
+      // this.login()
       const accessToken =  AsyncStorage.getItem(ACCESS_TOKEN).then(accessToken => {
         if (accessToken) {
           auth0.auth
@@ -41,21 +44,21 @@ import styles from "../../styles/Login";
                   hasInitialized: true
                 });
                 console.log("**********LOGIN*********")
-                console.log("Could not find access token")
+                console.log("Invalid access token: ", err)
                 console.log("**********LOGIN*********")
               });
         } else {
-          const refreshToken = AsyncStorage.getItem(REFRESH_TOKEN)
-          console.log("Refresh token fetching"+ refreshToken)
-                  auth0.auth
-                    .refreshToken({ refreshToken: refreshToken })
-                    .then(newAccessToken => {
-                      this.saveData(ACCESS_TOKEN, newAccessToken);
-                      RNRestart.Restart();
-                    })
-                    .catch(accessTokenErr => {
-                      console.log("error getting new access token: ", accessTokenErr);
-                    });
+          // const refreshToken = AsyncStorage.getItem(REFRESH_TOKEN)
+          // console.log("Refresh token fetching"+ refreshToken)
+          //         auth0.auth
+          //           .refreshToken({ refreshToken: refreshToken })
+          //           .then(newAccessToken => {
+          //             this.saveData(ACCESS_TOKEN, newAccessToken);
+          //             RNRestart.Restart();
+          //           })
+          //           .catch(accessTokenErr => {
+          //             console.log("error getting new access token: ", accessTokenErr);
+          //           });
               this.setState({
                 hasInitialized: true
               });
@@ -67,8 +70,6 @@ import styles from "../../styles/Login";
     saveData = async(key, value) => {
       console.log("Key :" +key+" , value: "+value)
       await AsyncStorage.setItem(key,value)
-      // const toek = AsyncStorage.getItem(key) 
-      // console.log("It got saved? "+toek)
     }
 
     login = () => {
@@ -76,22 +77,27 @@ import styles from "../../styles/Login";
       auth0
       .webAuth
       .authorize({
-        scope: Config.AUTHO_SCOPE,
-        audience: Config.AUTH0_AUDIENCE,
+        scope: "openid user",
+        audience: "hasura",
         prompt: "login" 
       })
       .then(credentials =>
       {
-          this.saveData(ACCESS_TOKEN, credentials.accessToken).then()
-          this.saveData(REFRESH_TOKEN, credentials.refreshToken).then()
+        console.log("**************")
+        console.log(credentials)
+        console.log("**************")
+          this.saveData(ACCESS_TOKEN, credentials.accessToken)
+          const accessTokenDecoded =  JSON.parse(JSON.stringify(jwt_decode(credentials.accessToken)));
+          console.log(accessTokenDecoded)
+          const hasuraCreds = accessTokenDecoded["https://hasura.io/jwt/claims"]
+          console.log(hasuraCreds)
+          console.log(hasuraCreds["x-hasura-user-id"])
+          this.saveData(USER_ID, hasuraCreds["x-hasura-user-id"])
           this.gotoHomeScreen()
       }).catch(error => console.log(error));
     };
     
     gotoHomeScreen = data => {
-      // this.setState({
-      //   hasInitialized: false
-      // });
       this.props.navigation.reset({
         index: 0,
         routes: [{name: MY_CONF_SCREEN}]

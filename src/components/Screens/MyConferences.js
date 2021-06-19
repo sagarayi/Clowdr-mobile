@@ -1,13 +1,20 @@
 //MyConferences.js
 import React, { Component } from "react";
-import { View, Button, Alert } from "react-native";
+import { View, Button, Alert, AsyncStorage } from "react-native";
 import AppButton from "../common/AppButton";
+import Auth0 from "react-native-auth0";
+import Config from "react-native-config";
 
 
 const TAB_NAV_SCREEN = "TabNav"
 const LOGIN_SCREEN = "Login"
 const ACCESS_TOKEN = "@accessToken"
 const REFRESH_TOKEN = "@refreshToken"
+
+const auth0 = new Auth0({
+    domain: Config.AUTH0_DOMAIN,
+    clientId: Config.AUTH0_CLIENT_ID
+  });
 
 export default class MyConferences extends React.Component {
 
