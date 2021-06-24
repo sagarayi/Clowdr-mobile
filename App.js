@@ -8,7 +8,11 @@ import Config from "react-native-config";
 const client = new ApolloClient({
   link: 
   new HttpLink({
-    uri: Config.HASURA_URL
+    uri: Config.HASURA_URL,
+    headers: {
+      'content-type': 'application/json',
+      'x-hasura-admin-secret': 'XXXXX'
+  }
   }),
   cache: new InMemoryCache()
 });

@@ -4,6 +4,7 @@ import { View, Button, Alert, AsyncStorage } from "react-native";
 import AppButton from "../common/AppButton";
 import Auth0 from "react-native-auth0";
 import Config from "react-native-config";
+import ListOfConferences from "../common/ListOfConferences"
 
 
 const TAB_NAV_SCREEN = "TabNav"
@@ -84,9 +85,10 @@ export default class MyConferences extends React.Component {
 
     render() {
     return <View>
-        <AppButton title="Conf 1" onPress={() => this.navigateToConference("Conf 1")}/>
-        <AppButton title="Conf 2" onPress={() => this.navigateToConference("Conf 2")}/>
-        <AppButton title="Join conf" onPress={() => this.navigateToJoinConference()}/>
+        <ListOfConferences/>
+        {/* <AppButton title="Conf 1" onPress={() => this.navigateToConference("Conf 1")}/> */}
+        {/* <AppButton title="Conf 2" onPress={() => this.navigateToConference("Conf 2")}/> */}
+        {/* <AppButton title="Join conf" onPress={() => this.navigateToJoinConference()}/> */}
     </View>
     }
 }
