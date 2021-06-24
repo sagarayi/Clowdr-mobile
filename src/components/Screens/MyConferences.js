@@ -12,6 +12,7 @@ const VIEW_SCHEDULE="View Schedule"
 const LOGIN_SCREEN = "Login"
 const ACCESS_TOKEN = "@accessToken"
 const REFRESH_TOKEN = "@refreshToken"
+const USER_ID="@userId"
 
 const auth0 = new Auth0({
     domain: Config.AUTH0_DOMAIN,
@@ -33,6 +34,7 @@ export default class MyConferences extends React.Component {
     }
 
     logout = () => {
+    this.deleteLocalCache(USER_ID)
     this.deleteLocalCache(ACCESS_TOKEN)
     .then(this.deleteLocalCache(REFRESH_TOKEN).then(() =>{
         auth0.webAuth

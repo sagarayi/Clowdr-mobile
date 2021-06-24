@@ -2,6 +2,7 @@ import React from "react";
 import { gql, useQuery } from '@apollo/client';
 import { View, Text, AsyncStorage, Button } from "react-native";
 import AppButton from "../common/AppButton";
+import { useEffect, useState } from "react";
 
 const GET_ALL_USERS = gql`
   query GetAllUsers {
@@ -29,19 +30,28 @@ const GET_ALL_CONFERENCES_FOR_USER = gql`
 
 const USER_ID="@userId"
 export default function ListOfConferences(props) {
-  const { loading1, error1, data1 } = useQuery(GET_ALL_USERS);
+
+  const [currentUserId, setCurrentUserId] = useState('');
+
+  useEffect(() => {
+      if(!currentUserId){
+        fetchCurrentUserId();
+      }
+  },[]);
+
+  const fetchCurrentUserId= async() =>{
+    const userId = await AsyncStorage.getItem(USER_ID)
+    setCurrentUserId(userId)
+  };
+  
 
   function onButtonClick(id, shortName) {
     console.log("Clicked button id: "+id)
     props.onConfClick(id, shortName)
-    // this.props.onClick()
     }
-
-    // const accessToken =  AsyncStorage.getItem(USER_ID).then(userId => {
-    const userId = "google-oauth2|112532042179139043360"
     
     const { loading, error, data } = useQuery(GET_ALL_CONFERENCES_FOR_USER, {
-        variables: {userId: userId}
+        variables: {userId: currentUserId}
     });
     if (loading) return <Text>'Loading...'</Text>;;
     if (error) {
