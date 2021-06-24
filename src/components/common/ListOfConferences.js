@@ -28,11 +28,12 @@ const GET_ALL_CONFERENCES_FOR_USER = gql`
 
 
 const USER_ID="@userId"
-export default function ListOfConferences() {
+export default function ListOfConferences(props) {
   const { loading1, error1, data1 } = useQuery(GET_ALL_USERS);
 
-  function onButtonClick(id) {
+  function onButtonClick(id, shortName) {
     console.log("Clicked button id: "+id)
+    props.onConfClick(id, shortName)
     // this.props.onClick()
     }
 
@@ -50,7 +51,7 @@ export default function ListOfConferences() {
   return <View>
       
       {data.User_by_pk.registrants.map((conf) =>{
-        return <AppButton title={conf.conference.shortName} onPress={() => onButtonClick(conf.conference.id)}/> 
+        return <AppButton title={conf.conference.shortName} onPress={() => onButtonClick(conf.conference.id, conf.conference.shortName)}/> 
        })} 
   </View>
 }

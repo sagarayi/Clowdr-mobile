@@ -8,6 +8,7 @@ import ListOfConferences from "../common/ListOfConferences"
 
 
 const TAB_NAV_SCREEN = "TabNav"
+const VIEW_SCHEDULE="View Schedule"
 const LOGIN_SCREEN = "Login"
 const ACCESS_TOKEN = "@accessToken"
 const REFRESH_TOKEN = "@refreshToken"
@@ -61,8 +62,11 @@ export default class MyConferences extends React.Component {
         await AsyncStorage.removeItem(key)
       }
 
-    navigateToConference(conference) {
-        this.props.navigation.navigate(TAB_NAV_SCREEN)
+    navigateToConference(conferenceId, shortName) {
+        this.props.navigation.navigate(VIEW_SCHEDULE,{
+            confId: conferenceId,
+            confName: shortName
+        })
     } 
 
     navigateToJoinConference() {
@@ -85,7 +89,8 @@ export default class MyConferences extends React.Component {
 
     render() {
     return <View>
-        <ListOfConferences/>
+        <ListOfConferences onConfClick={(id, shortName)=>{
+            this.navigateToConference(id, shortName)}}/>
         {/* <AppButton title="Conf 1" onPress={() => this.navigateToConference("Conf 1")}/> */}
         {/* <AppButton title="Conf 2" onPress={() => this.navigateToConference("Conf 2")}/> */}
         {/* <AppButton title="Join conf" onPress={() => this.navigateToJoinConference()}/> */}
