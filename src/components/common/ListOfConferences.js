@@ -60,7 +60,7 @@ export default function ListOfConferences(props) {
 
   return <View>
       
-      {data.User_by_pk.registrants.map((conf) =>{
+       {data.User_by_pk && data.User_by_pk.registrants.map((conf) =>{
         return <AppButton title={conf.conference.shortName} onPress={() => onButtonClick(conf.conference.id, conf.conference.shortName)}/> 
        })} 
   </View>
