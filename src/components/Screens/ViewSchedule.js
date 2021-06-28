@@ -6,11 +6,11 @@ import { Text } from "react-native";
 // import { useAuth0 } from "@auth0/";
 import GetAllConf from "../common/ListOfConferences"
 import { useEffect } from "react";
-  const events = [
+const events = [
     { start: new Date(), end: new Date(), title: 'Dr. Mariana Joseph', summary: '3412 Piedmont Rd NE, GA 3032' }
 ]
 
-
+var initialDate = new Date()
 
 
 const GET_ALL_USERS = gql`
@@ -37,7 +37,6 @@ query MyQuery {
  function parseAndLoadEvents(data, confId) {
         
     if (data){
-        console.log("Inside: "+data.schedule_Event)
         data.schedule_Event.map((event) => {
             if(event.conferenceId == confId){
                 const eachEvent = {
@@ -45,10 +44,13 @@ query MyQuery {
                     end: event.endTime,
                     title: event.name
                 }
-                console.log("Each event: \n"+ eachEvent)
                 events.push(eachEvent)
             }
         })
+        events.sort(function(event1, event2){
+            return new Date(event1.start) - new Date(event2.start)
+        });
+        initialDate = events[0].start
     }
 }
 
@@ -75,7 +77,7 @@ export default function ViewSchedule({route, navigation}) {
     parseAndLoadEvents(data, confId)
         
     return <EventCalendar
-            initDate="2021-06-01T17:05:00+00:00"
+            initDate={initialDate}
             events={events}
             width={400}/>
 }
