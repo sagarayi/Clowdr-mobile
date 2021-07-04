@@ -30,14 +30,14 @@ export default class MyConferences extends React.Component {
     this.deleteLocalCache(Constants.USER_ID)
     this.deleteLocalCache(Constants.ACCESS_TOKEN)
     .then(this.deleteLocalCache(Constants.REFRESH_TOKEN).then(() =>{
-        auth0.webAuth
-        .clearSession()
-        .then(res => {
-        console.log("clear session ok");
-        })
-        .catch(err => {
-        console.log("error clearing session: ", err);
-        });
+        // auth0.webAuth
+        // .clearSession()
+        // .then(res => {
+        // console.log("clear session ok");
+        // })
+        // .catch(err => {
+        // console.log("error clearing session: ", err);
+        // });
 
     this.gotoLoginScreen(); 
     }))
