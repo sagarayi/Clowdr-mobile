@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { gql, useQuery } from '@apollo/client';
 import EventCalendar from 'react-native-events-calendar'
 import { Text } from "react-native";
+import * as Constants from "../common/Constants";
 // import { useAuth0 } from "@auth0/";
 import GetAllConf from "../common/ListOfConferences"
 import { useEffect } from "react";
@@ -22,8 +23,8 @@ query MyQuery {
 `;
 
 const GET_ALL_EVENTS = gql`
-query MyQuery {
-    schedule_Event {
+query MyQuery($confId: uuid!) {
+    schedule_Event(where: {conferenceId: {_eq: $confId} }) {
       conferenceId
       durationSeconds
       endTime
@@ -34,18 +35,18 @@ query MyQuery {
     }
   }
 `
- function parseAndLoadEvents(data, confId) {
-        
+ function parseAndLoadEvents(data) {
+        console.log(JSON.stringify(data))
     if (data){
         data.schedule_Event.map((event) => {
-            if(event.conferenceId == confId){
+            // if(event.conferenceId == confId){
                 const eachEvent = {
                     start: event.startTime,
                     end: event.endTime,
                     title: event.name
                 }
                 events.push(eachEvent)
-            }
+            // }
         })
         events.sort(function(event1, event2){
             return new Date(event1.start) - new Date(event2.start)
@@ -61,6 +62,10 @@ export default function ViewSchedule({route, navigation}) {
     //     }
     //     // fetchEventData()
     // });
+
+    function onEventTapped(event){
+        navigation.navigate(Constants.MY_CONF_SCREEN)
+    }
     
     const {confId, confName} = route.params
 
@@ -69,7 +74,9 @@ export default function ViewSchedule({route, navigation}) {
         headerTitle: confName
     }) 
 
-    const { loading, error, data } = useQuery(GET_ALL_EVENTS, { fetchPolicy: "no-cache" });
+    const { loading, error, data } = useQuery(GET_ALL_EVENTS,{
+        variables: {confId: confId}
+    }, { fetchPolicy: "no-cache" });
 
     if (loading) return <Text>'Loading...'</Text>;
     if (error) return <Text> `Error! ${error.message}`;</Text>
@@ -79,5 +86,6 @@ export default function ViewSchedule({route, navigation}) {
     return <EventCalendar
             initDate={initialDate}
             events={events}
-            width={400}/>
+            width={400}
+            eventTapped={(event)=>{ onEventTapped(event)}}/>
 }

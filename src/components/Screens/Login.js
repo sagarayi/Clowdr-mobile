@@ -9,18 +9,12 @@
  import jwt_decode from "jwt-decode";
 
 import styles from "../../styles/Login";
+import * as Constants from "../common/Constants";
 
   const auth0 = new Auth0({
     domain: Config.AUTH0_DOMAIN,
     clientId: Config.AUTH0_CLIENT_ID
   });
-  
-  const ACCESS_TOKEN = "@accessToken"
-  const REFRESH_TOKEN = "@refreshToken"
-  const USER_ID="@userId"
-  const HOME_SCREEN = "Home"
-  const TAB_NAV_SCREEN = "TabNav"
-  const MY_CONF_SCREEN = "MyConf"
 
   export default class Login extends Component {
 
@@ -31,7 +25,7 @@ import styles from "../../styles/Login";
      componentDidMount() {
       // this.gotoHomeScreen()
       // this.login()
-      const accessToken =  AsyncStorage.getItem(ACCESS_TOKEN).then(accessToken => {
+      const accessToken =  AsyncStorage.getItem(Constants.ACCESS_TOKEN).then(accessToken => {
         if (accessToken) {
           auth0.auth
                .userInfo({ token: accessToken })
@@ -86,13 +80,13 @@ import styles from "../../styles/Login";
         console.log("**************")
         console.log(credentials)
         console.log("**************")
-          this.saveData(ACCESS_TOKEN, credentials.accessToken)
+          this.saveData(Constants.ACCESS_TOKEN, credentials.accessToken)
           const accessTokenDecoded =  JSON.parse(JSON.stringify(jwt_decode(credentials.accessToken)));
           console.log(accessTokenDecoded)
           const hasuraCreds = accessTokenDecoded["https://hasura.io/jwt/claims"]
           console.log(hasuraCreds)
           console.log(hasuraCreds["x-hasura-user-id"])
-          this.saveData(USER_ID, hasuraCreds["x-hasura-user-id"])
+          this.saveData(Constants.USER_ID, hasuraCreds["x-hasura-user-id"])
           this.gotoHomeScreen()
       }).catch(error => console.log(error));
     };
@@ -100,9 +94,9 @@ import styles from "../../styles/Login";
     gotoHomeScreen = data => {
       this.props.navigation.reset({
         index: 0,
-        routes: [{name: MY_CONF_SCREEN}]
+        routes: [{name: Constants.MY_CONF_SCREEN}]
       })
-        this.props.navigation.navigate(MY_CONF_SCREEN)
+        this.props.navigation.navigate(Constants.MY_CONF_SCREEN)
         
       };
 

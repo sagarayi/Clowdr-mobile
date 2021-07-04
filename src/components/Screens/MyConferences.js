@@ -5,14 +5,7 @@ import AppButton from "../common/AppButton";
 import Auth0 from "react-native-auth0";
 import Config from "react-native-config";
 import ListOfConferences from "../common/ListOfConferences"
-
-
-const TAB_NAV_SCREEN = "TabNav"
-const VIEW_SCHEDULE="View Schedule"
-const LOGIN_SCREEN = "Login"
-const ACCESS_TOKEN = "@accessToken"
-const REFRESH_TOKEN = "@refreshToken"
-const USER_ID="@userId"
+import * as Constants from "../common/Constants";
 
 const auth0 = new Auth0({
     domain: Config.AUTH0_DOMAIN,
@@ -34,9 +27,9 @@ export default class MyConferences extends React.Component {
     }
 
     logout = () => {
-    this.deleteLocalCache(USER_ID)
-    this.deleteLocalCache(ACCESS_TOKEN)
-    .then(this.deleteLocalCache(REFRESH_TOKEN).then(() =>{
+    this.deleteLocalCache(Constants.USER_ID)
+    this.deleteLocalCache(Constants.ACCESS_TOKEN)
+    .then(this.deleteLocalCache(Constants.REFRESH_TOKEN).then(() =>{
         auth0.webAuth
         .clearSession()
         .then(res => {
@@ -54,10 +47,10 @@ export default class MyConferences extends React.Component {
         
         this.props.navigation.reset({
         index: 0,
-        routes: [{name: LOGIN_SCREEN}]
+        routes: [{name: Constants.LOGIN_SCREEN}]
         })
 
-        this.props.navigation.navigate(LOGIN_SCREEN)
+        this.props.navigation.navigate(Constants.LOGIN_SCREEN)
     };
 
     deleteLocalCache = async(key) => {
@@ -65,7 +58,7 @@ export default class MyConferences extends React.Component {
       }
 
     navigateToConference(conferenceId, shortName) {
-        this.props.navigation.navigate(VIEW_SCHEDULE,{
+        this.props.navigation.navigate(Constants.VIEW_SCHEDULE,{
             confId: conferenceId,
             confName: shortName
         })
