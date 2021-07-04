@@ -5,6 +5,7 @@ import EventCalendar from 'react-native-events-calendar'
 import { Text } from "react-native";
 import * as Constants from "../common/Constants";
 import * as Queries from "../common/GraphQLQueries";
+import PresentationEvent from "../Screens/PresentationEvent";
 // import { useAuth0 } from "@auth0/";
 import GetAllConf from "../common/ListOfConferences"
 import { useEffect } from "react";
@@ -23,7 +24,8 @@ var initialDate = new Date()
                 const eachEvent = {
                     start: event.startTime,
                     end: event.endTime,
-                    title: event.name
+                    title: event.name,
+                    id: event.id,
                 }
                 events.push(eachEvent)
             // }
@@ -44,7 +46,9 @@ export default function ViewSchedule({route, navigation}) {
     // });
 
     function onEventTapped(event){
-        navigation.navigate(Constants.MY_CONF_SCREEN)
+        navigation.navigate(Constants.PRESENTATION_EVENT, {
+            event:event
+        })
     }
     
     const {confId, confName} = route.params
