@@ -1,30 +1,9 @@
 import React from "react";
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { View, Text, AsyncStorage, Button } from "react-native";
 import AppButton from "../common/AppButton";
 import { useEffect, useState } from "react";
-
-const GET_ALL_USERS = gql`
-  query GetAllUsers {
-    User {
-      id
-    }
-  }
-`;
-//"google-oauth2|112532042179139043360"
-const GET_ALL_CONFERENCES_FOR_USER = gql`
-  query ($userId: String!) {
-    User_by_pk(id: $userId) {
-        registrants {
-          conference {
-            id
-            name
-            shortName
-          }
-        }
-      }
-  }
-`;
+import * as Queries from "../common/GraphQLQueries";
 
 
 
@@ -50,7 +29,7 @@ export default function ListOfConferences(props) {
     props.onConfClick(id, shortName)
     }
     
-    const { loading, error, data } = useQuery(GET_ALL_CONFERENCES_FOR_USER, {
+    const { loading, error, data } = useQuery(Queries.GET_ALL_CONFERENCES_FOR_USER, {
         variables: {userId: currentUserId}
     });
     if (loading) return <Text>'Loading...'</Text>;;

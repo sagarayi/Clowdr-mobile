@@ -1,9 +1,10 @@
 //ViewSchedule.js
-import React, { Component } from "react";
-import { gql, useQuery } from '@apollo/client';
+import React from "react";
+import { useQuery } from '@apollo/client';
 import EventCalendar from 'react-native-events-calendar'
 import { Text } from "react-native";
 import * as Constants from "../common/Constants";
+import * as Queries from "../common/GraphQLQueries";
 // import { useAuth0 } from "@auth0/";
 import GetAllConf from "../common/ListOfConferences"
 import { useEffect } from "react";
@@ -14,27 +15,6 @@ const events = [
 var initialDate = new Date()
 
 
-const GET_ALL_USERS = gql`
-query MyQuery {
-    User {
-      id
-    }
-  }
-`;
-
-const GET_ALL_EVENTS = gql`
-query MyQuery($confId: uuid!) {
-    schedule_Event(where: {conferenceId: {_eq: $confId} }) {
-      conferenceId
-      durationSeconds
-      endTime
-      id
-      name
-      roomId
-      startTime
-    }
-  }
-`
  function parseAndLoadEvents(data) {
         console.log(JSON.stringify(data))
     if (data){
@@ -74,7 +54,7 @@ export default function ViewSchedule({route, navigation}) {
         headerTitle: confName
     }) 
 
-    const { loading, error, data } = useQuery(GET_ALL_EVENTS,{
+    const { loading, error, data } = useQuery(Queries.GET_ALL_EVENTS,{
         variables: {confId: confId}
     }, { fetchPolicy: "no-cache" });
 
