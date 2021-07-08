@@ -9,9 +9,7 @@ import PresentationEvent from "../Screens/PresentationEvent";
 // import { useAuth0 } from "@auth0/";
 import GetAllConf from "../common/ListOfConferences"
 import { useEffect } from "react";
-const events = [
-    { start: new Date(), end: new Date(), title: 'Dr. Mariana Joseph', summary: '3412 Piedmont Rd NE, GA 3032' }
-]
+const events = [ ]
 
 var initialDate = new Date()
 
@@ -26,6 +24,7 @@ var initialDate = new Date()
                     end: event.endTime,
                     title: event.name,
                     id: event.id,
+                    itemId: event.itemId
                 }
                 events.push(eachEvent)
             // }
