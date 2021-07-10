@@ -86,3 +86,18 @@ fragment ProgramPersonData on content_ItemProgramPerson {
     priority
 }
 `;
+
+export const FETCH_TAGS = gql`
+query Tags($conferenceId: uuid!) {
+    collection_Tag(where: { conferenceId: { _eq: $conferenceId } }) {
+        ...ItemList_TagInfo
+    }
+}
+
+fragment ItemList_TagInfo on collection_Tag {
+    id
+    colour
+    name
+    priority
+}
+`;

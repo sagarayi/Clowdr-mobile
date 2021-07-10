@@ -14,7 +14,7 @@ const events = [ ]
 var initialDate = new Date()
 
 
- function parseAndLoadEvents(data) {
+ function parseAndLoadEvents(data, confId) {
         console.log(JSON.stringify(data))
     if (data){
         data.schedule_Event.map((event) => {
@@ -24,7 +24,8 @@ var initialDate = new Date()
                     end: event.endTime,
                     title: event.name,
                     id: event.id,
-                    itemId: event.itemId
+                    itemId: event.itemId,
+                    confId: confId
                 }
                 events.push(eachEvent)
             // }
@@ -70,5 +71,5 @@ export default function ViewSchedule({route, navigation}) {
             initDate={initialDate}
             events={events}
             width={400}
-            eventTapped={(event)=>{ onEventTapped(event)}}/>
+            eventTapped={(event)=>{ onEventTapped(event, confId)}}/>
 }

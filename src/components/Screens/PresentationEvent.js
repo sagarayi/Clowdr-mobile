@@ -1,12 +1,13 @@
 import React, {useMemo} from "react";
 import { useQuery } from '@apollo/client';
 import EventCalendar from 'react-native-events-calendar'
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
 import * as Constants from "../common/Constants";
 import * as Queries from "../common/GraphQLQueries";
 import AppButton from "../common/AppButton";
 import EventAuthorView from "./EventAuthorView";
 import EventElement from "./EventElement";
+import TagElement from "./TagElement";
 
 
 const styles = StyleSheet.create({
@@ -23,6 +24,14 @@ const styles = StyleSheet.create({
         textAlign: "justify"
     }
 })
+
+function sleep(milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+      currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
+  }
 
 export default function PresentationEvent({route, navigation}) {
 
@@ -42,31 +51,42 @@ export default function PresentationEvent({route, navigation}) {
         },
     })
 
+    if (loading) {
+        return <ActivityIndicator size="large" />
+    }
+    
     if (error) {
         console.log("error: "+error)
     }else {
         
     }
+    console.log("Loading : "+ loading)
     console.log(JSON.stringify(data))
 
     const itemData = data.content_Item_by_pk
 
+    // var abstractElement = <View></View>
 
-    const abstractElement = useMemo(() => {
-        const abstractItem = itemData.elements.find(
-            (element) => element.typeName === Constants.Content_ElementType.Abstract
-        );
-        return abstractItem && <EventElement element={abstractItem} />;
-    }, [itemData.elements]);
+    // if (!loading){
+    //    const  abstractElement = (() => {
+            const abstractItem = itemData.elements.find(
+                (element) => element.typeName === Constants.Content_ElementType.Abstract
+            );
+            // return abstractItem && <EventElement element={abstractItem} />;
+        // });
+    // }
     
 
     return <ScrollView>
+        {loading && <ActivityIndicator size="large"/>}
+        <TagElement confId={event.confId}/>
         <AppButton title="Discussion Room" onPress={()=>{alert("this will join the presentation")}}/>
         {data.content_Item_by_pk.itemPeople && data.content_Item_by_pk.itemPeople.map((author) => {
             // alert(author)
            return <EventAuthorView author={author}/>
         })}
-        {abstractElement}
+        <EventElement element={abstractItem} />
         <Text>{Constants.lineBreak}</Text>
+        
     </ScrollView>
 }
