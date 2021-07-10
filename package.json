@@ -31,7 +31,8 @@
     "react-native-safe-area-context": "^3.2.0",
     "react-native-screens": "^3.2.0",
     "react-native-sensitive-info": "^6.0.0-alpha.9",
-    "react-native-ui-lib": "^5.27.0"
+    "react-native-ui-lib": "^5.27.0",
+    "tinycolor2": "^1.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

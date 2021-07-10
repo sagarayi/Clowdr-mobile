@@ -6,14 +6,14 @@ import * as Constants from "../common/Constants";
 import * as Queries from "../common/GraphQLQueries";
 import AppButton from "../common/AppButton";
 import {Chip, Colors, Spacings} from 'react-native-ui-lib';
+import Color from "tinycolor2";
+import tinycolor from "tinycolor2";
 
 const styles = StyleSheet.create({
     rectangle: {
-        width: 50,
-        height: 20,
-        backgroundColor: "white",
-        borderColor: "black",
-        borderWidth: 2
+        marginTop: 10,
+        marginLeft: 10,
+        justifyContent: 'flex-start', flexDirection: 'row'
     },
     tagName: {
         alignContent: "center",
@@ -21,6 +21,12 @@ const styles = StyleSheet.create({
         textAlign: "center"
     }
 })
+
+function getColorForString(colorString){
+    const color = tinycolor(colorString)
+    console.log("Color hex: "+color.toHex())
+    return "#"+color.toHex()
+}
 
 export default function TagElement({confId}) {
     console.log("ConfId : "+confId)
@@ -40,7 +46,11 @@ export default function TagElement({confId}) {
 
     return <View>
         { data.collection_Tag && data.collection_Tag.map((tag) => {
-            return <Chip label={tag.name}/>
+            return <View style={styles.rectangle}>
+            <Chip label={tag.name} backgroundColor={getColorForString(tag.colour)} labelStyle={{
+                color: 'black'
+              }}/>
+            </View>
         })}
     </View>
 }
