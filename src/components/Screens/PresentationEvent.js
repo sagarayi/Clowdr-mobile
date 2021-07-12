@@ -67,25 +67,25 @@ export default function PresentationEvent({route, navigation}) {
 
     // var abstractElement = <View></View>
 
-    // if (!loading){
+    var abstractItem = []
+    if (itemData && itemData.elements){
     //    const  abstractElement = (() => {
-            const abstractItem = itemData.elements.find(
+            abstractItem = itemData.elements.find(
                 (element) => element.typeName === Constants.Content_ElementType.Abstract
             );
             // return abstractItem && <EventElement element={abstractItem} />;
         // });
-    // }
+    }
     
 
     return <ScrollView>
         {loading && <ActivityIndicator size="large"/>}
-        <TagElement confId={event.confId}/>
-        <AppButton title="Discussion Room" onPress={()=>{alert("this will join the presentation")}}/>
-        {data.content_Item_by_pk.itemPeople && data.content_Item_by_pk.itemPeople.map((author) => {
-            // alert(author)
+        {itemData && <TagElement confId={event.confId}/>}
+        {itemData &&<AppButton title="Discussion Room" onPress={()=>{alert("this will join the presentation")}}/>}
+        {itemData && itemData.itemPeople && itemData.itemPeople.map((author) => {
            return <EventAuthorView author={author}/>
         })}
-        <EventElement element={abstractItem} />
+        {itemData && <EventElement element={abstractItem} />}
         <Text>{Constants.lineBreak}</Text>
         
     </ScrollView>
