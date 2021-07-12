@@ -2,14 +2,15 @@
 import React from "react";
 import { useQuery } from '@apollo/client';
 import EventCalendar from 'react-native-events-calendar'
-import { Text } from "react-native";
+import { Button, Text } from "react-native";
 import * as Constants from "../common/Constants";
 import * as Queries from "../common/GraphQLQueries";
+import {HeaderBackButton} from "@react-navigation/stack";
 import PresentationEvent from "../Screens/PresentationEvent";
 // import { useAuth0 } from "@auth0/";
 import GetAllConf from "../common/ListOfConferences"
 import { useEffect } from "react";
-const events = [ ]
+var events = [ ]
 
 var initialDate = new Date()
 
@@ -38,12 +39,18 @@ var initialDate = new Date()
 }
 
 export default function ViewSchedule({route, navigation}) {
-    // useEffect(() => {
-    //     return function cleanup(){
-    //         events.length = 0
-    //     }
-    //     // fetchEventData()
-    // });
+
+    navigation.setOptions({
+        headerLeft: () => (
+            <HeaderBackButton
+            label={confName}
+             onPress={()=> {
+                events = []
+                navigation.pop()
+
+            }}/>
+        ),
+    })
 
     function onEventTapped(event){
         navigation.navigate(Constants.PRESENTATION_EVENT, {
