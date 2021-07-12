@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery } from '@apollo/client';
-import { View, Text, AsyncStorage, Button } from "react-native";
+import { View, Text, AsyncStorage, Button, ActivityIndicator } from "react-native";
 import AppButton from "../common/AppButton";
 import { useEffect, useState } from "react";
 import * as Queries from "../common/GraphQLQueries";
@@ -32,7 +32,9 @@ export default function ListOfConferences(props) {
     const { loading, error, data } = useQuery(Queries.GET_ALL_CONFERENCES_FOR_USER, {
         variables: {userId: currentUserId}
     });
-    if (loading) return <Text>'Loading...'</Text>;;
+    if (loading) {
+        return <ActivityIndicator size="large" />
+    }
     if (error) {
         console.log(error)
         return <Text>error</Text>;}

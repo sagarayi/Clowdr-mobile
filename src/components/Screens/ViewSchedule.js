@@ -2,7 +2,7 @@
 import React from "react";
 import { useQuery } from '@apollo/client';
 import EventCalendar from 'react-native-events-calendar'
-import { Button, Text } from "react-native";
+import { Button, Text, ActivityIndicator } from "react-native";
 import * as Constants from "../common/Constants";
 import * as Queries from "../common/GraphQLQueries";
 import {HeaderBackButton} from "@react-navigation/stack";
@@ -69,7 +69,9 @@ export default function ViewSchedule({route, navigation}) {
         variables: {confId: confId}
     }, { fetchPolicy: "no-cache" });
 
-    if (loading) return <Text>'Loading...'</Text>;
+    if (loading) {
+        return <ActivityIndicator size="large" />
+    }
     if (error) return <Text> `Error! ${error.message}`;</Text>
     
     parseAndLoadEvents(data, confId)
