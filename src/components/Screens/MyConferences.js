@@ -86,9 +86,6 @@ export default class MyConferences extends React.Component {
     return <View>
         <ListOfConferences onConfClick={(id, shortName)=>{
             this.navigateToConference(id, shortName)}}/>
-        {/* <AppButton title="Conf 1" onPress={() => this.navigateToConference("Conf 1")}/> */}
-        {/* <AppButton title="Conf 2" onPress={() => this.navigateToConference("Conf 2")}/> */}
-        {/* <AppButton title="Join conf" onPress={() => this.navigateToJoinConference()}/> */}
     </View>
     }
 }

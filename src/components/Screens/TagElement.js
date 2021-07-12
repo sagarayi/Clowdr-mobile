@@ -5,7 +5,7 @@ import { Text, View, Image, StyleSheet, ActivityIndicator } from "react-native";
 import * as Constants from "../common/Constants";
 import * as Queries from "../common/GraphQLQueries";
 import AppButton from "../common/AppButton";
-import {Chip, Colors, Spacings} from 'react-native-ui-lib';
+import {Chip} from 'react-native-ui-lib';
 import Color from "tinycolor2";
 import tinycolor from "tinycolor2";
 
@@ -47,7 +47,10 @@ export default function TagElement({confId}) {
     return <View>
         { data.collection_Tag && data.collection_Tag.map((tag) => {
             return <View style={styles.rectangle}>
-            <Chip label={tag.name} backgroundColor={getColorForString(tag.colour)} labelStyle={{
+            <Chip label={tag.name} 
+            backgroundColor={getColorForString(tag.colour)} 
+            containerStyle={{borderWidth: 0}}
+            labelStyle={{
                 color: 'black'
               }}/>
             </View>
