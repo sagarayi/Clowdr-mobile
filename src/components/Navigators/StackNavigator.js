@@ -9,6 +9,7 @@ import MyConferences from '../Screens/MyConferences';
 import ViewSchedule from '../Screens/ViewSchedule';
 import * as Constants from "../common/Constants";
 import PresentationEvent from '../Screens/PresentationEvent';
+import VideoStream from '../Screens/VideoStream';
 
 const Stack = createStackNavigator();
 
@@ -19,6 +20,7 @@ function StackNavigator() {
                     <Stack.Screen name={Constants.VIEW_SCHEDULE} component={ViewSchedule} />
                     <Stack.Screen name={Constants.MY_CONF_SCREEN} component={MyConferences} options={{headerLeft: ()=> null}}/>
                     <Stack.Screen name={Constants.PRESENTATION_EVENT} component={PresentationEvent} />
+                    <Stack.Screen name={Constants.VIDEO_STREAM} component={VideoStream} />
                 </Stack.Navigator>
             </NavigationContainer>
 }

@@ -35,6 +35,11 @@ function sleep(milliseconds) {
 
 export default function PresentationEvent({route, navigation}) {
 
+    function navigateToVideoStream(){
+        navigation.navigate(Constants.VIDEO_STREAM,{
+            videoURI: "https://www.youtube.com/embed/5qap5aO4i9A"
+        })
+    }
     const event = route.params.event
 
     const itemId = event.itemId
@@ -81,7 +86,7 @@ export default function PresentationEvent({route, navigation}) {
     return <ScrollView>
         {loading && <ActivityIndicator size="large"/>}
         {itemData && <TagElement confId={event.confId}/>}
-        {itemData &&<AppButton title="Discussion Room" onPress={()=>{alert("this will join the presentation")}}/>}
+        {itemData &&<AppButton title="Discussion Room" onPress={()=>{navigateToVideoStream()}}/>}
         {itemData && itemData.itemPeople && itemData.itemPeople.map((author) => {
            return <EventAuthorView author={author}/>
         })}
