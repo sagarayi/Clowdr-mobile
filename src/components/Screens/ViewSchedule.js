@@ -50,12 +50,17 @@ export default function ViewSchedule({route, navigation}) {
 
             }}/>
         ),
+        headerRight: () => (<Button onPress={navigateToAllChatView} title="All chats"/>)
     })
 
     function onEventTapped(event){
         navigation.navigate(Constants.PRESENTATION_EVENT, {
             event:event
         })
+    }
+
+    function navigateToAllChatView() {
+        navigation.navigate(Constants.ALL_CHAT_VIEW)
     }
     
     const {confId, confName} = route.params

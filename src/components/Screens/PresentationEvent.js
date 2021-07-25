@@ -1,7 +1,7 @@
 import React, {useMemo} from "react";
 import { useQuery } from '@apollo/client';
 import EventCalendar from 'react-native-events-calendar'
-import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, Text, ActionSheetIOS, Button } from "react-native";
 import * as Constants from "../common/Constants";
 import * as Queries from "../common/GraphQLQueries";
 import AppButton from "../common/AppButton";
@@ -35,10 +35,41 @@ function sleep(milliseconds) {
 
 export default function PresentationEvent({route, navigation}) {
 
+    navigation.setOptions({
+        headerLeft: ()=> null,
+        headerRight: () => (<Button onPress={showChatMenu} title="..."/>)
+    }) 
+
+
     function navigateToVideoStream(){
         navigation.navigate(Constants.VIDEO_STREAM,{
-            videoURI: "https://www.youtube.com/embed/5qap5aO4i9A"
+            videoURI: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
+            // "https://www.youtube.com/embed/5qap5aO4i9A"
+            // "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
+            // 
+            // https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8
         })
+    }
+
+    function showChatMenu() {
+        ActionSheetIOS.showActionSheetWithOptions(
+            {
+              options: ['Cancel', 'Event chat', 'All chats'],
+              cancelButtonIndex: 0
+            },
+            (buttonIndex) => {
+              if (buttonIndex === 2) {
+                navigateToAllChatView()
+              }
+              if (buttonIndex === 1) {
+                alert("Will navigate to detailed chat view")
+              }
+            }
+          );
+    }
+
+    function navigateToAllChatView() {
+        navigation.navigate(Constants.ALL_CHAT_VIEW)
     }
     const event = route.params.event
 
@@ -86,7 +117,7 @@ export default function PresentationEvent({route, navigation}) {
     return <ScrollView>
         {loading && <ActivityIndicator size="large"/>}
         {itemData && <TagElement confId={event.confId}/>}
-        {itemData &&<AppButton title="Discussion Room" onPress={()=>{navigateToVideoStream()}}/>}
+        {itemData &&<AppButton title="Live Video" onPress={()=>{navigateToVideoStream()}}/>}
         {itemData && itemData.itemPeople && itemData.itemPeople.map((author) => {
            return <EventAuthorView author={author}/>
         })}
