@@ -33,6 +33,8 @@ function sleep(milliseconds) {
     } while (currentDate - date < milliseconds);
   }
 
+
+
 export default function PresentationEvent({route, navigation}) {
 
     navigation.setOptions({
@@ -40,6 +42,29 @@ export default function PresentationEvent({route, navigation}) {
         headerRight: () => (<Button onPress={showChatMenu} title="..."/>)
     }) 
 
+
+    function showChatMenu() {
+        ActionSheetIOS.showActionSheetWithOptions(
+            {
+              options: ['Cancel', 'Event chat', 'All chats'],
+              cancelButtonIndex: 0
+            },
+            (buttonIndex) => {
+              if (buttonIndex === 2) {
+                navigateTo(Constants.ALL_CHAT_VIEW)
+              }
+              if (buttonIndex === 1) {
+                  console.log("chat Id: "+chatId)
+                  console.log("chat title: "+title)
+                  
+                  navigation.navigate(Constants.DETAILED_CHAT_VIEW, {
+                    chatId: chatId,
+                    chatTitle: title
+                })
+              }
+            }
+          );
+    }
 
     function navigateToVideoStream(){
         navigation.navigate(Constants.VIDEO_STREAM,{
@@ -51,27 +76,13 @@ export default function PresentationEvent({route, navigation}) {
         })
     }
 
-    function showChatMenu() {
-        ActionSheetIOS.showActionSheetWithOptions(
-            {
-              options: ['Cancel', 'Event chat', 'All chats'],
-              cancelButtonIndex: 0
-            },
-            (buttonIndex) => {
-              if (buttonIndex === 2) {
-                navigateToAllChatView()
-              }
-              if (buttonIndex === 1) {
-                alert("Will navigate to detailed chat view")
-              }
-            }
-          );
-    }
+    
 
-    function navigateToAllChatView() {
-        navigation.navigate(Constants.ALL_CHAT_VIEW)
+    function navigateTo(screenName) {
+        navigation.navigate(screenName)
     }
     const event = route.params.event
+    console.log("Event : "+ JSON.stringify(event))
 
     const itemId = event.itemId
 
@@ -93,6 +104,7 @@ export default function PresentationEvent({route, navigation}) {
     
     if (error) {
         console.log("error: "+error)
+        return <Text>Error loading data</Text>
     }else {
         
     }
@@ -103,6 +115,9 @@ export default function PresentationEvent({route, navigation}) {
 
     // var abstractElement = <View></View>
 
+    const chatId = itemData.chatId
+    const title = event.title
+    
     var abstractItem = []
     if (itemData && itemData.elements){
     //    const  abstractElement = (() => {
