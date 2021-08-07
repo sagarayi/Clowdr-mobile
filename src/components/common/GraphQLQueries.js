@@ -102,13 +102,28 @@ fragment ItemList_TagInfo on collection_Tag {
 }
 `;
 
+export const VIDEO_ELEMENT = gql`
+        query VideoPlayer_GetElement($elementId: uuid!) {
+            content_Element_by_pk(id: $elementId) {
+                id
+                typeName
+                isHidden
+                data
+                name
+                item {
+                    id
+                    title
+                }
+            }
+        }
+    `;
 
-export const FETCH_ROOM_CHAT_ID = gql`
-query GetRoomChatId($roomId: uuid!) {
-  room_Room_by_pk(id: $roomId) {
-      id
-      chatId
-      name
-  }
-}
-`
+// export const FETCH_ROOM_CHAT_ID = gql`
+// query GetRoomChatId($roomId: uuid!) {
+//   room_Room_by_pk(id: $roomId) {
+//       id
+//       chatId
+//       name
+//   }
+// }
+// `

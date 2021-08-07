@@ -1,6 +1,5 @@
-import React, {useMemo} from "react";
+import React from "react";
 import { useQuery } from '@apollo/client';
-import EventCalendar from 'react-native-events-calendar'
 import { ActivityIndicator, ScrollView, StyleSheet, Text, ActionSheetIOS, Button } from "react-native";
 import * as Constants from "../common/Constants";
 import * as Queries from "../common/GraphQLQueries";
@@ -8,6 +7,7 @@ import AppButton from "../common/AppButton";
 import EventAuthorView from "./EventAuthorView";
 import EventElement from "./EventElement";
 import TagElement from "./TagElement";
+import {HeaderBackButton} from "@react-navigation/stack";
 
 
 const styles = StyleSheet.create({
@@ -38,7 +38,15 @@ function sleep(milliseconds) {
 export default function PresentationEvent({route, navigation}) {
 
     navigation.setOptions({
-        headerLeft: ()=> null,
+        headerLeft: () => (
+            <HeaderBackButton
+            label="Back"
+             onPress={()=> {
+                events = []
+                navigation.pop()
+
+            }}/>
+        ),
         headerRight: () => (<Button onPress={showChatMenu} title="..."/>)
     }) 
 
@@ -67,13 +75,17 @@ export default function PresentationEvent({route, navigation}) {
     }
 
     function navigateToVideoStream(){
-        navigation.navigate(Constants.VIDEO_STREAM,{
-            videoURI: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
-            // "https://www.youtube.com/embed/5qap5aO4i9A"
-            // "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
-            // 
-            // https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8
-        })
+        const lastIndex = parseInt(videoItem.data.length) - 1
+        const videoURL = videoItem.data[lastIndex].data.url 
+        if (videoURL) {
+            navigation.navigate(Constants.VIDEO_STREAM,{
+                videoURI: videoURL
+                // "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
+                // "https://www.youtube.com/embed/5qap5aO4i9A"
+            })
+        } else {
+            alert("Error loading URL")
+        }
     }
 
     
@@ -127,12 +139,19 @@ export default function PresentationEvent({route, navigation}) {
             // return abstractItem && <EventElement element={abstractItem} />;
         // });
     }
+
+    var videoItem = []
+    if (itemData && itemData.elements){
+        videoItem = itemData.elements.find(
+            (element) => element.typeName === Constants.Content_ElementType.Video
+        );
+    }
     
 
     return <ScrollView>
         {loading && <ActivityIndicator size="large"/>}
         {itemData && <TagElement confId={event.confId}/>}
-        {itemData &&<AppButton title="Live Video" onPress={()=>{navigateToVideoStream()}}/>}
+        {itemData && videoItem && <AppButton title="Live Video" onPress={()=>{navigateToVideoStream()}}/>}
         {itemData && itemData.itemPeople && itemData.itemPeople.map((author) => {
            return <EventAuthorView author={author}/>
         })}
