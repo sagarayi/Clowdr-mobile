@@ -15,13 +15,21 @@ import { v4 as uuidv4 } from "uuid";
 import Config from "react-native-config";
 import io from "socket.io-client";
 import { graphql } from "graphql";
+import { useState } from "react";
 
 const styles = StyleSheet.create({
     container: {
-      height: 400,
+    //   height: 400,
       flex: 1,
       backgroundColor: '#F5FCFF',
     },
+    footer : {
+        height: 100
+    },
+    messages: {
+        flex: 1,
+        height: "80%"
+    }
   });
 
 const fetchAccessToken = async() => {
@@ -57,13 +65,52 @@ function getMessageObject(chatId, message, senderId) {
     return action
 }
 
+const messages1 = [
+    {
+        sId: uuidv4(),
+        message: "Test message 1",
+        senderId: "Sender Name 1",
+        created_at: Date()
+    },
+    {
+        sId: uuidv4(),
+        message: "Test message 2",
+        senderId: "Sender Name 2",
+        created_at: Date()
+    }
+]
+
+function getMessageObjectFromResponse(response) {
+    const res = JSON.parse(response)
+    
+    if (!res || !res.data) {
+        return {}
+    }
+    const data = res.data
+    console.log("response parsed  : "+ JSON.stringify(data))
+    console.log("response parsed sid : "+ data.sId)
+    console.log("response parsed message : "+ data.message)
+    // console.log("response parsed senderId : "+ data.senderId)
+    console.log("response parsed created_at : "+ data.created_at)
+    const msg =     {
+        sId: data.sId,
+        message: data.message,
+        senderId: uuidv4(),
+        // data.senderId,
+        created_at: data.created_at
+    }
+
+    return msg
+
+}
+
 export default function DetailedChatView({route, navigation}) {
 
     console.log("route : "+ JSON.stringify(route))
     const chatId = route.params.chatId
     const title = route.params.chatTitle
 
-    // const socket = io("http://localhost:1234");
+    const socket = io("http://localhost:1234");
 
     const token = fetchAccessToken()
     const userId = fetchCurrentUserId()
@@ -76,7 +123,7 @@ export default function DetailedChatView({route, navigation}) {
     });
     // io.connect(Config.WEBSOCKET_SERVER_URL)
 
-    
+    const [messages, setMessages] = useState([])
 
     console.log(Config.WEBSOCKET_SERVER_URL)
 
@@ -112,29 +159,40 @@ export default function DetailedChatView({route, navigation}) {
     //         socket.emit("chat.messages.send", action);
 
     
-    // socket.on("chat message", msg => {
-    //     chatMessagesObject.push(msg)
-    //     console.log("Got back :" + msg)
-    //     //   this.setState({ chatMessages: [...this.state.chatMessages, msg]   
-    // });
+    socket.on("chat message", msg => {
+        const message = getMessageObjectFromResponse(msg)
+        
+        // messages.push(message)
+
+        setMessages(oldMessages => [...oldMessages, message])
+        console.log(messages)
+        chatMessagesObject.push(msg)
+        console.log("Got back :" + msg)
+        //   this.setState({ chatMessages: [...this.state.chatMessages, msg]   
+    });
 
     function submitChatMessage() {
         const uuid = uuidv4()
         
         const message = getMessageObject(chatId, chatMessage, userId)
-        // client.emit("chat.subscribe", uuid);
+        client.emit("chat.subscribe", uuid);
         client.emit("chat.messages.send", message)
         console.log("Sent?? "+uuid)
-        // socket.emit('chat message', chatMessage);
+        socket.emit('chat message', message);
         chatMessage = ''
+
+        // chatMessages = messages.map(msgInfo => (
+        //     <MessageView messageInfo={msgInfo}/>
+        // ));
+    
       }
 
 
     var chatMessage = ""
     var chatMessagesObject= []
 
-    const chatMessages = chatMessagesObject.map(chatMessage => (
-        <Text style={{borderWidth: 2, top: 500}}>{chatMessage}</Text>
+    var chatMessages = messages.map(msgInfo => (
+        <MessageView messageInfo={msgInfo}/>
       ));
 
     navigation.setOptions({
@@ -144,13 +202,20 @@ export default function DetailedChatView({route, navigation}) {
     console.log(chatMessages)
     
 
-    return <View style={styles.container}>
-            {chatMessagesObject.map((msg)=> {
+    return <ScrollView style={styles.container}>
+            
+            {/* {chatMessagesObject.map((msg)=> {
                 return <Text style={{borderWidth: 2, top: 500}}>{msg}</Text>
-            })}
+            })} */}
         {/* {chatMessages} */}
+        <View style={styles.messages}>
+        {messages && messages.map((msgInfo) => {
+            return <MessageView messageInfo={msgInfo}/>
+        })}
+        </View> 
+        <View style={styles.footer}>
         <TextInput
-          style={{height: 40, borderWidth: 2, top: 600}}
+          style={{height: 40, borderWidth: 1, top: 600}}
           autoCorrect={false}
         //   value={chatMessage}
           onSubmitEditing={() => submitChatMessage()}
@@ -160,5 +225,7 @@ export default function DetailedChatView({route, navigation}) {
             chatMessage = chatMessage + chat
           }}
         />
-      </View>
+        </View>
+
+      </ScrollView>
 }

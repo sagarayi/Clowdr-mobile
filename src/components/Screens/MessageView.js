@@ -14,21 +14,27 @@ import { TextInput } from "react-native-gesture-handler";
 const styles = StyleSheet.create({
     tinyLogo: {
       width: "10%",
-      height: "30%",
+      height: "200%",
       
       marginLeft: 10
     },
+    rowContainer: {
+        flexDirection: 'row'
+      },
     authorName: {
-        left: 40,
+        left: 20,
         marginLeft: 10,
         fontWeight: "bold"
     },
-    authorDetails: {
-        left: 30,
+    day: {  
         marginLeft: 10
     },
+    outerView: {
+        marginTop: 10,
+        marginBottom: 10
+    },
     message:{
-        left: 30
+        left: 20
     },
     rectangle: {
         marginTop: 10,
@@ -54,12 +60,26 @@ function getTimeFromDate(dateString) {
 }
 
 export default function MessageView({messageInfo}) {
-    return <View>
-        <Text style={styles.authorName} >Name</Text>
-        <Text>{getDayFromDate(Date())}</Text>
-        <Text>{getTimeFromDate(Date())}</Text>
-        <Image style={styles.tinyLogo}
-        source={require("../../../assets/avatar.png")} />
-        <Text style={styles.message}>Message</Text>
+    return <View style={styles.outerView}>
+        <View style={styles.rowContainer}>
+            <Text style={styles.day} >{getDayFromDate(messageInfo.created_at)}</Text>
+            <Text style={styles.authorName} >{messageInfo.senderId}</Text>
+        </View>
+        <View style={styles.rowContainer}>
+            <Text style={styles.day}>{getTimeFromDate(messageInfo.created_at)}</Text>
+        </View>
+        <View style={styles.rowContainer}>
+            <Image 
+                style={styles.tinyLogo}
+                source={require("../../../assets/avatar.png")} />
+            <Text style={styles.message}>{messageInfo.message}</Text>
+        </View>
+        <View
+  style={{
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    marginTop: 40
+  }}
+/>
     </View>
 }
