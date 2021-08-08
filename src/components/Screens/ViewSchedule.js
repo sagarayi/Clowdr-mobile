@@ -2,10 +2,11 @@
 import React from "react";
 import { useQuery } from '@apollo/client';
 import EventCalendar from 'react-native-events-calendar'
-import { Button, Text, ActivityIndicator } from "react-native";
+import { Button, Text, ActivityIndicator, View } from "react-native";
 import * as Constants from "../common/Constants";
 import * as Queries from "../common/GraphQLQueries";
 import {HeaderBackButton} from "@react-navigation/stack";
+import styles from "../../styles/Login";
 import PresentationEvent from "../Screens/PresentationEvent";
 // import { useAuth0 } from "@auth0/";
 import GetAllConf from "../common/ListOfConferences"
@@ -34,7 +35,9 @@ var initialDate = new Date()
         events.sort(function(event1, event2){
             return new Date(event1.start) - new Date(event2.start)
         });
-        initialDate = events[0].start
+        if (events.length > 0) {
+            initialDate = events[0].start   
+        }
     }
 }
 
@@ -77,9 +80,15 @@ export default function ViewSchedule({route, navigation}) {
     if (loading) {
         return <ActivityIndicator size="large" />
     }
-    if (error) return <Text> `Error! ${error.message}`;</Text>
+    // if (error) return <Text> `Error! ${error.message}`;</Text>
     
     parseAndLoadEvents(data, confId)
+    console.log("events ", events)
+    if(events.length == 0) {
+        return <View style={styles.container}>
+            <Text> No Events to display</Text>
+        </View>
+    }
         
     return <EventCalendar
             initDate={initialDate}
