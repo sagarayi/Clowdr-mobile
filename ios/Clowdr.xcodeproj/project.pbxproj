@@ -8,12 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* ClowdrTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* ClowdrTests.m */; };
+		084A86BE8937116B2621F1BF /* libPods-Clowdr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E47CA71CE461F2F3016DAA93 /* libPods-Clowdr.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		4678CD36170A16E0805DEF47 /* libPods-Clowdr-ClowdrTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F751E68E82C68D00B3E06DC /* libPods-Clowdr-ClowdrTests.a */; };
-		6B361BA1DA90084BBC7DEC9A /* libPods-Clowdr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6633A2A55A6AAB59EF4E5C54 /* libPods-Clowdr.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		FE0AA59118F5B12D7FBB4539 /* libPods-Clowdr-ClowdrTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FFC56A2BC22610D830452D62 /* libPods-Clowdr-ClowdrTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,20 +30,20 @@
 		00E356EE1AD99517003FC87E /* ClowdrTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ClowdrTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* ClowdrTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClowdrTests.m; sourceTree = "<group>"; };
+		03C74287DA6A2B0ED1CF606A /* Pods-Clowdr-ClowdrTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clowdr-ClowdrTests.release.xcconfig"; path = "Target Support Files/Pods-Clowdr-ClowdrTests/Pods-Clowdr-ClowdrTests.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Clowdr.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clowdr.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Clowdr/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Clowdr/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Clowdr/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Clowdr/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Clowdr/main.m; sourceTree = "<group>"; };
-		369D632727FB729E8A41D71E /* Pods-Clowdr-ClowdrTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clowdr-ClowdrTests.debug.xcconfig"; path = "Target Support Files/Pods-Clowdr-ClowdrTests/Pods-Clowdr-ClowdrTests.debug.xcconfig"; sourceTree = "<group>"; };
-		3F751E68E82C68D00B3E06DC /* libPods-Clowdr-ClowdrTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Clowdr-ClowdrTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		57E02BE91D713427F57877BD /* Pods-Clowdr.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clowdr.debug.xcconfig"; path = "Target Support Files/Pods-Clowdr/Pods-Clowdr.debug.xcconfig"; sourceTree = "<group>"; };
-		6633A2A55A6AAB59EF4E5C54 /* libPods-Clowdr.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Clowdr.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		6C85E1930568119183739F75 /* Pods-Clowdr-ClowdrTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clowdr-ClowdrTests.release.xcconfig"; path = "Target Support Files/Pods-Clowdr-ClowdrTests/Pods-Clowdr-ClowdrTests.release.xcconfig"; sourceTree = "<group>"; };
+		4E540C550FE4EE22C27D765C /* Pods-Clowdr.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clowdr.debug.xcconfig"; path = "Target Support Files/Pods-Clowdr/Pods-Clowdr.debug.xcconfig"; sourceTree = "<group>"; };
+		527AB61C44A08A801F09FCE9 /* Pods-Clowdr-ClowdrTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clowdr-ClowdrTests.debug.xcconfig"; path = "Target Support Files/Pods-Clowdr-ClowdrTests/Pods-Clowdr-ClowdrTests.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Clowdr/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		83E3E9D275399258F90D4A45 /* Pods-Clowdr.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clowdr.release.xcconfig"; path = "Target Support Files/Pods-Clowdr/Pods-Clowdr.release.xcconfig"; sourceTree = "<group>"; };
+		DDCF5D7CF10B74D6C925B970 /* Pods-Clowdr.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Clowdr.release.xcconfig"; path = "Target Support Files/Pods-Clowdr/Pods-Clowdr.release.xcconfig"; sourceTree = "<group>"; };
+		E47CA71CE461F2F3016DAA93 /* libPods-Clowdr.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Clowdr.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		FFC56A2BC22610D830452D62 /* libPods-Clowdr-ClowdrTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Clowdr-ClowdrTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,7 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4678CD36170A16E0805DEF47 /* libPods-Clowdr-ClowdrTests.a in Frameworks */,
+				FE0AA59118F5B12D7FBB4539 /* libPods-Clowdr-ClowdrTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,7 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6B361BA1DA90084BBC7DEC9A /* libPods-Clowdr.a in Frameworks */,
+				084A86BE8937116B2621F1BF /* libPods-Clowdr.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,8 +100,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				6633A2A55A6AAB59EF4E5C54 /* libPods-Clowdr.a */,
-				3F751E68E82C68D00B3E06DC /* libPods-Clowdr-ClowdrTests.a */,
+				E47CA71CE461F2F3016DAA93 /* libPods-Clowdr.a */,
+				FFC56A2BC22610D830452D62 /* libPods-Clowdr-ClowdrTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -122,6 +122,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				C06553EF92C8C7E3D7341034 /* Pods */,
+				BF383B356C9144D8A8CB2316 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -137,13 +138,20 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		BF383B356C9144D8A8CB2316 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		C06553EF92C8C7E3D7341034 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				57E02BE91D713427F57877BD /* Pods-Clowdr.debug.xcconfig */,
-				83E3E9D275399258F90D4A45 /* Pods-Clowdr.release.xcconfig */,
-				369D632727FB729E8A41D71E /* Pods-Clowdr-ClowdrTests.debug.xcconfig */,
-				6C85E1930568119183739F75 /* Pods-Clowdr-ClowdrTests.release.xcconfig */,
+				4E540C550FE4EE22C27D765C /* Pods-Clowdr.debug.xcconfig */,
+				DDCF5D7CF10B74D6C925B970 /* Pods-Clowdr.release.xcconfig */,
+				527AB61C44A08A801F09FCE9 /* Pods-Clowdr-ClowdrTests.debug.xcconfig */,
+				03C74287DA6A2B0ED1CF606A /* Pods-Clowdr-ClowdrTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -155,12 +163,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "ClowdrTests" */;
 			buildPhases = (
-				4AF3C082E558D993E55B31ED /* [CP] Check Pods Manifest.lock */,
+				3C6196A4859CD66319A5CE1C /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				002FF5ED729F2C2D016B0EF7 /* [CP] Embed Pods Frameworks */,
-				6DC1DA18848ECF9C33EFF020 /* [CP] Copy Pods Resources */,
+				9219B1ECA3DF75A25BD03BA7 /* [CP] Embed Pods Frameworks */,
+				7083DA8C3D0D764109677B3F /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -176,14 +184,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Clowdr" */;
 			buildPhases = (
-				BCFE5A40A1CE30699F3752C7 /* [CP] Check Pods Manifest.lock */,
+				33DD880D3D5C94352284368A /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				8E9E19954FAC1AAAFAC67A42 /* [CP] Embed Pods Frameworks */,
-				17B40C4DEFFC8A4073C83843 /* [CP] Copy Pods Resources */,
+				BD443C9424AFF111E48F61C3 /* [CP] Embed Pods Frameworks */,
+				D569DEABD3C53D5E578A6874 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -250,23 +258,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		002FF5ED729F2C2D016B0EF7 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Clowdr-ClowdrTests/Pods-Clowdr-ClowdrTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Clowdr-ClowdrTests/Pods-Clowdr-ClowdrTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Clowdr-ClowdrTests/Pods-Clowdr-ClowdrTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -281,24 +272,29 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		17B40C4DEFFC8A4073C83843 /* [CP] Copy Pods Resources */ = {
+		33DD880D3D5C94352284368A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Clowdr/Pods-Clowdr-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Copy Pods Resources";
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Clowdr/Pods-Clowdr-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Clowdr-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Clowdr/Pods-Clowdr-resources.sh\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		4AF3C082E558D993E55B31ED /* [CP] Check Pods Manifest.lock */ = {
+		3C6196A4859CD66319A5CE1C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -320,7 +316,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		6DC1DA18848ECF9C33EFF020 /* [CP] Copy Pods Resources */ = {
+		7083DA8C3D0D764109677B3F /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -337,7 +333,24 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Clowdr-ClowdrTests/Pods-Clowdr-ClowdrTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		8E9E19954FAC1AAAFAC67A42 /* [CP] Embed Pods Frameworks */ = {
+		9219B1ECA3DF75A25BD03BA7 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Clowdr-ClowdrTests/Pods-Clowdr-ClowdrTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Clowdr-ClowdrTests/Pods-Clowdr-ClowdrTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Clowdr-ClowdrTests/Pods-Clowdr-ClowdrTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BD443C9424AFF111E48F61C3 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -354,26 +367,21 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Clowdr/Pods-Clowdr-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		BCFE5A40A1CE30699F3752C7 /* [CP] Check Pods Manifest.lock */ = {
+		D569DEABD3C53D5E578A6874 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Clowdr/Pods-Clowdr-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
+			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Clowdr-checkManifestLockResult.txt",
+				"${PODS_ROOT}/Target Support Files/Pods-Clowdr/Pods-Clowdr-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Clowdr/Pods-Clowdr-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -428,7 +436,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 369D632727FB729E8A41D71E /* Pods-Clowdr-ClowdrTests.debug.xcconfig */;
+			baseConfigurationReference = 527AB61C44A08A801F09FCE9 /* Pods-Clowdr-ClowdrTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -455,7 +463,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6C85E1930568119183739F75 /* Pods-Clowdr-ClowdrTests.release.xcconfig */;
+			baseConfigurationReference = 03C74287DA6A2B0ED1CF606A /* Pods-Clowdr-ClowdrTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -479,7 +487,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 57E02BE91D713427F57877BD /* Pods-Clowdr.debug.xcconfig */;
+			baseConfigurationReference = 4E540C550FE4EE22C27D765C /* Pods-Clowdr.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -505,7 +513,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 83E3E9D275399258F90D4A45 /* Pods-Clowdr.release.xcconfig */;
+			baseConfigurationReference = DDCF5D7CF10B74D6C925B970 /* Pods-Clowdr.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
