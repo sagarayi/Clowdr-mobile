@@ -74,12 +74,11 @@ export default function PresentationEvent({route, navigation}) {
           );
     }
 
-    function navigateToVideoStream(){
-        const lastIndex = parseInt(videoItem.data.length) - 1
-        const videoURL = videoItem.data[lastIndex].data.url 
-        if (videoURL) {
+    function navigateToVideoStream(url){
+        
+        if (url) {
             navigation.navigate(Constants.VIDEO_STREAM,{
-                videoURI: videoURL
+                videoURI: url
                 // "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
                 // "https://www.youtube.com/embed/5qap5aO4i9A"
             })
@@ -142,16 +141,25 @@ export default function PresentationEvent({route, navigation}) {
 
     var videoItem = []
     if (itemData && itemData.elements){
-        videoItem = itemData.elements.find(
-            (element) => element.typeName === Constants.Content_ElementType.Video
-        );
+        itemData.elements.map((element) => {
+         if(element.typeName === Constants.Content_ElementType.Video ||
+            element.typeName === Constants.Content_ElementType.VideoLink ) {
+             videoItem.push(element) 
+         }
+        });
     }
+    
     
 
     return <ScrollView>
         {loading && <ActivityIndicator size="large"/>}
         {itemData && <TagElement confId={event.confId}/>}
-        {itemData && videoItem && <AppButton title="Video" onPress={()=>{navigateToVideoStream()}}/>}
+        {itemData && videoItem && videoItem.map((video) => {
+            const url = video.data[0].data.url
+            if (url){
+                return <AppButton title={video.name} onPress={()=>{navigateToVideoStream(url)}}/>   
+            }
+        })}
         {itemData && itemData.itemPeople && itemData.itemPeople.map((author) => {
            return <EventAuthorView author={author}/>
         })}
