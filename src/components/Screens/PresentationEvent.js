@@ -151,7 +151,7 @@ export default function PresentationEvent({route, navigation}) {
     return <ScrollView>
         {loading && <ActivityIndicator size="large"/>}
         {itemData && <TagElement confId={event.confId}/>}
-        {itemData && videoItem && <AppButton title="Live Video" onPress={()=>{navigateToVideoStream()}}/>}
+        {itemData && videoItem && <AppButton title="Video" onPress={()=>{navigateToVideoStream()}}/>}
         {itemData && itemData.itemPeople && itemData.itemPeople.map((author) => {
            return <EventAuthorView author={author}/>
         })}

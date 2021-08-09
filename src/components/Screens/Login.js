@@ -1,6 +1,6 @@
  // Login.js
  import React, { Component } from "react";
- import { View, Text, Button, ActivityIndicator, AsyncStorage } from "react-native";
+ import { View, Text, Button, ActivityIndicator, AsyncStorage, Image } from "react-native";
 
  import Auth0 from "react-native-auth0";
  import Config from "react-native-config";
@@ -102,11 +102,13 @@ import * as Constants from "../common/Constants";
 
     render() {
         return (
-          <View style={styles.container}>
-            {this.state.hasInitialized && (
-              <AppButton title='Login' onPress={this.login}/>  
-            )}
-          </View>
+            <View style={styles.container}>
+            <Image style={styles.logo}
+              source={require("../../../assets/clowdr-512x512.png")} />
+              {this.state.hasInitialized && (
+                <AppButton title='Login' onPress={this.login}/>  
+              )}
+            </View>
         );
       }
   }

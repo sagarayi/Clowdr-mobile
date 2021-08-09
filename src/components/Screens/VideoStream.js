@@ -26,6 +26,9 @@ const styles = StyleSheet.create({
 export default function VideoStream({route, navigation}) {
     const videoURI = route.params.videoURI
 
+    navigation.setOptions({
+      headerTitle: "Video"
+  }) 
     return <WebView
     style={ {  marginTop: (Platform.OS == 'ios') ? 20 : 0,} }
     javaScriptEnabled={true}

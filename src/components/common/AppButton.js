@@ -13,8 +13,8 @@ import {
   const styles = StyleSheet.create({
     appButtonContainer: {
       elevation: 8,
-      backgroundColor: "#009688",
-      borderRadius: 10,
+      backgroundColor: "#58b655",
+      borderRadius: 5,
       marginLeft:50,
       marginRight: 50,
       marginTop: 50,

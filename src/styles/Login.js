@@ -5,6 +5,14 @@ import { StyleSheet } from "react-native";
         flex: 1,
         justifyContent: "center",
         alignItems: "center"
+      },
+      logo: {
+        width: "50%",
+        height: "25%",
+        
+      },
+      loginButton : {
+        width: "50%"
       }
     });
 
