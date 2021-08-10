@@ -25,5 +25,5 @@ export const RoleName = {
 }
 
 export const ChatMessageType = {
-    Message: 'Message'
+    Message: 'MESSAGE'
 }

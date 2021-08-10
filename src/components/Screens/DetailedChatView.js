@@ -1,7 +1,7 @@
 import React, {useMemo} from "react";
 import { useQuery } from '@apollo/client';
 import EventCalendar from 'react-native-events-calendar'
-import { ActivityIndicator, ScrollView, StyleSheet, Text, ActionSheetIOS, AsyncStorage, View } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, Text, ActionSheetIOS, AsyncStorage, View, Button } from "react-native";
 import * as Constants from "../common/Constants";
 import * as Queries from "../common/GraphQLQueries";
 import AppButton from "../common/AppButton";
@@ -42,6 +42,18 @@ const fetchCurrentUserId= async() =>{
   };
 
 function getMessageObject(chatId, message, senderId) {
+    // created_at: string;
+    // updated_at: string;
+    // type: Chat_MessageType_Enum;
+    // chatId: string;
+    // senderId: string | null | undefined;
+    // message: string;
+    // data: any;
+    // isPinned: boolean;
+    // duplicatedMessageSId?: string | null | undefined;
+    // systemId?: string | null | undefined;
+    // remoteServiceId?: string | null | undefined;
+    // sId: string;
     const sId = uuidv4();
     const newMsg = {
                     sId: sId,
@@ -51,8 +63,8 @@ function getMessageObject(chatId, message, senderId) {
                     message: message,
                     senderId: senderId,
                     type: Constants.ChatMessageType.Message,
-                    data: "",
-                    isPinned: "true",
+                    data: {},
+                    isPinned: false
                 }
     const action = {
         op: "INSERT",
@@ -102,12 +114,6 @@ function getMessageObjectFromResponse(response) {
 }
 
 export default function DetailedChatView({route, navigation}) {
-
-    const fetchAccessToken = async() => {
-        const accessToken = await AsyncStorage.getItem(Constants.ACCESS_TOKEN);
-        // console.log(accessToken)
-        return JSON.stringify(accessToken)
-    }
     // var client = null
     // useEffect(() => {
 
@@ -119,10 +125,12 @@ export default function DetailedChatView({route, navigation}) {
 
     // const socket = io("http://localhost:1234");
 
-    const token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImJOeW9NQ1BtLWpzeWVFY2JPVDRkRyJ9.eyJodHRwczovL2hhc3VyYS5pby9qd3QvY2xhaW1zIjp7IngtaGFzdXJhLWRlZmF1bHQtcm9sZSI6InVzZXIiLCJ4LWhhc3VyYS1hbGxvd2VkLXJvbGVzIjpbInVzZXIiLCJ1bmF1dGhlbnRpY2F0ZWQiXSwieC1oYXN1cmEtdXNlci1pZCI6Imdvb2dsZS1vYXV0aDJ8MTEyNTMyMDQyMTc5MTM5MDQzMzYwIiwieC1oYXN1cmEtY29uZmVyZW5jZS1zbHVncyI6IntcIm1hYzIwMjFcIixcIm1hYzIwMjJcIn0ifSwiaXNzIjoiaHR0cHM6Ly9kZXYtampyYmZoeDUudXMuYXV0aDAuY29tLyIsInN1YiI6Imdvb2dsZS1vYXV0aDJ8MTEyNTMyMDQyMTc5MTM5MDQzMzYwIiwiYXVkIjpbImhhc3VyYSIsImh0dHBzOi8vZGV2LWpqcmJmaHg1LnVzLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE2Mjg1MjQzMTMsImV4cCI6MTYyODYxMDcxMywiYXpwIjoiQ2RJa2hidm1nRDRLbFFnV21TeXFpZW1kUUFiT2lQNloiLCJzY29wZSI6Im9wZW5pZCJ9.ZsVlNpZFhAAyB39R6BGLJMNZXBeHl87HXIesCcWh_GfInh0x5-cITPVLnaRWsiqRR8oAU397gNmK4uCSNaVKpGH5jCPvsWMbWfniW-ebq-6bclRbZnUYfzigtzypMMTU-STb4wEAwDJATcR6PB5zGqRcA_liNcwkqVJsShCzGQQKZC6kO4ZLc1zn3VtdGsyuuTV4PYHD3o5Os-euzia8rwPKPgcPSce7VOIC0J8i4cBuQhcLQ60i6uQLtjYA2pJEVhCkfEHpTz1uGm4xJPIqaZBtorj0iFr1-r15b0fHOjL3cGp07gChmH7BzmnAonIvQBXg-L63T86NkojH-1e8-g'
+    const token = route.params.token
+    const userId = route.params.userId
+    console.log("token : ", token)
+    // 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImJOeW9NQ1BtLWpzeWVFY2JPVDRkRyJ9.eyJodHRwczovL2hhc3VyYS5pby9qd3QvY2xhaW1zIjp7IngtaGFzdXJhLWRlZmF1bHQtcm9sZSI6InVzZXIiLCJ4LWhhc3VyYS1hbGxvd2VkLXJvbGVzIjpbInVzZXIiLCJ1bmF1dGhlbnRpY2F0ZWQiXSwieC1oYXN1cmEtdXNlci1pZCI6Imdvb2dsZS1vYXV0aDJ8MTEyNTMyMDQyMTc5MTM5MDQzMzYwIiwieC1oYXN1cmEtY29uZmVyZW5jZS1zbHVncyI6IntcIm1hYzIwMjFcIixcIm1hYzIwMjJcIn0ifSwiaXNzIjoiaHR0cHM6Ly9kZXYtampyYmZoeDUudXMuYXV0aDAuY29tLyIsInN1YiI6Imdvb2dsZS1vYXV0aDJ8MTEyNTMyMDQyMTc5MTM5MDQzMzYwIiwiYXVkIjpbImhhc3VyYSIsImh0dHBzOi8vZGV2LWpqcmJmaHg1LnVzLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE2Mjg1MjQzMTMsImV4cCI6MTYyODYxMDcxMywiYXpwIjoiQ2RJa2hidm1nRDRLbFFnV21TeXFpZW1kUUFiT2lQNloiLCJzY29wZSI6Im9wZW5pZCJ9.ZsVlNpZFhAAyB39R6BGLJMNZXBeHl87HXIesCcWh_GfInh0x5-cITPVLnaRWsiqRR8oAU397gNmK4uCSNaVKpGH5jCPvsWMbWfniW-ebq-6bclRbZnUYfzigtzypMMTU-STb4wEAwDJATcR6PB5zGqRcA_liNcwkqVJsShCzGQQKZC6kO4ZLc1zn3VtdGsyuuTV4PYHD3o5Os-euzia8rwPKPgcPSce7VOIC0J8i4cBuQhcLQ60i6uQLtjYA2pJEVhCkfEHpTz1uGm4xJPIqaZBtorj0iFr1-r15b0fHOjL3cGp07gChmH7BzmnAonIvQBXg-L63T86NkojH-1e8-g'
     // console.log("Token: ",token)
     // 
-    const userId =  ""
     // fetchCurrentUserId()
     // console.log("Access token : "+token)
 
@@ -158,9 +166,13 @@ export default function DetailedChatView({route, navigation}) {
         },
         transports: ["websocket"],
     });
+    useEffect(() => {
+        console.log("chatid inside: ", chatId)
+        client.emit("chat.subscribe", chatId);
+    },[]);
     // console.log("Auth : "+ JSON.stringify(client.auth))
-    client.emit("chat.subscribe", chatId);
-    client.emit("chat.messages.send", getMessageObject(uuidv4(), "test", uuidv4()));
+    
+    
     
     // console.log(client.io.)
     client.on("chat.subscribed", () => {
@@ -217,19 +229,19 @@ export default function DetailedChatView({route, navigation}) {
     //     //   this.setState({ chatMessages: [...this.state.chatMessages, msg]   
     // });
 
-    function submitChatMessage() {
-        // const uuid = uuidv4()
+    function submitChatMessage(chatMessage) {
+        const uuid = uuidv4()
         
-        // const message = getMessageObject(chatId, chatMessage, userId)
+        const message = getMessageObject(chatId, chatMessage, userId)
         
-        // client.emit("chat.messages.send", message)
-        // console.log("Sent?? "+uuid)
+        client.emit("chat.messages.send", message)
+        console.log("Sent?? "+uuid)
         // socket.emit('chat message', message);
-        // chatMessage = ''
+        chatMessage = ''
 
-        // chatMessages = messages.map(msgInfo => (
-        //     <MessageView messageInfo={msgInfo}/>
-        // ));
+        chatMessages = messages.map(msgInfo => (
+            <MessageView messageInfo={msgInfo}/>
+        ));
     
       }
 
@@ -260,7 +272,7 @@ export default function DetailedChatView({route, navigation}) {
         })}
     </View> 
         <View style={styles.footer}>
-            <TextInput/>
+        <Button onPress={() => submitChatMessage("Test message")} title="Send Message"/>
         {/* <TextInput
           style={{height: 40, borderWidth: 1, top: 600}}
         //   autoCorrect={false}

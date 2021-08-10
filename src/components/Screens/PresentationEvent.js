@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery } from '@apollo/client';
-import { ActivityIndicator, ScrollView, StyleSheet, Text, ActionSheetIOS, Button } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, Text, ActionSheetIOS, AsyncStorage, Button } from "react-native";
 import * as Constants from "../common/Constants";
 import * as Queries from "../common/GraphQLQueries";
 import AppButton from "../common/AppButton";
@@ -8,6 +8,7 @@ import EventAuthorView from "./EventAuthorView";
 import EventElement from "./EventElement";
 import TagElement from "./TagElement";
 import {HeaderBackButton} from "@react-navigation/stack";
+import { useEffect, useState } from "react";
 
 
 const styles = StyleSheet.create({
@@ -50,6 +51,31 @@ export default function PresentationEvent({route, navigation}) {
         headerRight: () => (<Button onPress={showChatMenu} title="..."/>)
     }) 
 
+    const [currentAcessToken, setCurrentAcessToken] = useState('');
+
+    useEffect(() => {
+      if(!currentAcessToken){
+        fetchAccessToken();
+      }
+      if(!currentUserId){
+        fetchCurrentUserId();
+      }
+  },[]);
+
+  const fetchAccessToken= async() =>{
+    const accessToken = await AsyncStorage.getItem(Constants.ACCESS_TOKEN)
+    setCurrentAcessToken(accessToken)
+  };
+
+  const [currentUserId, setCurrentUserId] = useState('');
+
+
+
+  const fetchCurrentUserId= async() =>{
+    const userId = await AsyncStorage.getItem(Constants.USER_ID)
+    setCurrentUserId(userId)
+  };
+
 
     function showChatMenu() {
         ActionSheetIOS.showActionSheetWithOptions(
@@ -67,7 +93,9 @@ export default function PresentationEvent({route, navigation}) {
                   
                   navigation.navigate(Constants.DETAILED_CHAT_VIEW, {
                     chatId: chatId,
-                    chatTitle: title
+                    chatTitle: title,
+                    token: currentAcessToken,
+                    userId: currentUserId
                 })
               }
             }
