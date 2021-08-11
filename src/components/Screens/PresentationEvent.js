@@ -36,6 +36,7 @@ function sleep(milliseconds) {
 
 
 
+
 export default function PresentationEvent({route, navigation}) {
 
     navigation.setOptions({
@@ -95,7 +96,8 @@ export default function PresentationEvent({route, navigation}) {
                     chatId: chatId,
                     chatTitle: title,
                     token: currentAcessToken,
-                    userId: currentUserId
+                    userId: currentUserId,
+                    confId: event.confId
                 })
               }
             }
@@ -147,8 +149,8 @@ export default function PresentationEvent({route, navigation}) {
     }else {
         
     }
-    console.log("Loading : "+ loading)
-    console.log(JSON.stringify(data))
+
+    // console.log(JSON.stringify(data))
 
     const itemData = data.content_Item_by_pk
 
@@ -176,6 +178,11 @@ export default function PresentationEvent({route, navigation}) {
          }
         });
     }
+
+    
+
+    
+
     
     
 

@@ -118,6 +118,23 @@ export const VIDEO_ELEMENT = gql`
         }
     `;
 
+export const FETCH_SENDER_IDS = gql`
+query MyQuery {
+  registrant_Registrant {
+    displayName
+    id
+    userId
+  }
+}
+`
+//  gql`
+// query RegistrantsById($conferenceId: uuid!) {
+//   registrant_Registrant(where: { conferenceId: { _eq: $conferenceId } }) {
+//       ...RegistrantData
+//   }
+// }`
+
+
 // export const FETCH_ROOM_CHAT_ID = gql`
 // query GetRoomChatId($roomId: uuid!) {
 //   room_Room_by_pk(id: $roomId) {

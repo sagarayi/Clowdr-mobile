@@ -61,7 +61,10 @@ function getMessageObject(chatId, message, senderId) {
                     updated_at: new Date().toISOString(),
                     chatId: chatId, 
                     message: message,
-                    senderId: senderId,
+                    senderId: "c370b4fb-be18-4d61-9e9d-3802e9d0d373",
+                    // uuidv4(),
+                    // 
+                    // senderId,
                     type: Constants.ChatMessageType.Message,
                     data: {},
                     isPinned: false
@@ -104,13 +107,34 @@ function getMessageObjectFromResponse(response) {
     const msg =     {
         sId: data.sId,
         message: data.message,
-        senderId: uuidv4(),
+        senderId: data.senderId,
         // data.senderId,
         created_at: data.created_at
     }
 
     return msg
 
+}
+
+function parseRegistrants(registrants){
+    console.log("Registrants : ",JSON.stringify(registrants))
+    if (registrants){
+        const userDict = {}
+        const regs = registrants.registrant_Registrant
+        regs.map((person) => {
+            console.log(person)
+            console.log(JSON.stringify(person))
+            userDict[person.id] = person
+        })
+
+        console.log(userDict)
+        return userDict
+    }
+    return {}
+}
+
+function getNameForId(registrants, id) {
+    return registrants[id].displayName
 }
 
 export default function DetailedChatView({route, navigation}) {
@@ -127,6 +151,7 @@ export default function DetailedChatView({route, navigation}) {
 
     const token = route.params.token
     const userId = route.params.userId
+    const confId = route.params.confId
     console.log("token : ", token)
     // 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImJOeW9NQ1BtLWpzeWVFY2JPVDRkRyJ9.eyJodHRwczovL2hhc3VyYS5pby9qd3QvY2xhaW1zIjp7IngtaGFzdXJhLWRlZmF1bHQtcm9sZSI6InVzZXIiLCJ4LWhhc3VyYS1hbGxvd2VkLXJvbGVzIjpbInVzZXIiLCJ1bmF1dGhlbnRpY2F0ZWQiXSwieC1oYXN1cmEtdXNlci1pZCI6Imdvb2dsZS1vYXV0aDJ8MTEyNTMyMDQyMTc5MTM5MDQzMzYwIiwieC1oYXN1cmEtY29uZmVyZW5jZS1zbHVncyI6IntcIm1hYzIwMjFcIixcIm1hYzIwMjJcIn0ifSwiaXNzIjoiaHR0cHM6Ly9kZXYtampyYmZoeDUudXMuYXV0aDAuY29tLyIsInN1YiI6Imdvb2dsZS1vYXV0aDJ8MTEyNTMyMDQyMTc5MTM5MDQzMzYwIiwiYXVkIjpbImhhc3VyYSIsImh0dHBzOi8vZGV2LWpqcmJmaHg1LnVzLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE2Mjg1MjQzMTMsImV4cCI6MTYyODYxMDcxMywiYXpwIjoiQ2RJa2hidm1nRDRLbFFnV21TeXFpZW1kUUFiT2lQNloiLCJzY29wZSI6Im9wZW5pZCJ9.ZsVlNpZFhAAyB39R6BGLJMNZXBeHl87HXIesCcWh_GfInh0x5-cITPVLnaRWsiqRR8oAU397gNmK4uCSNaVKpGH5jCPvsWMbWfniW-ebq-6bclRbZnUYfzigtzypMMTU-STb4wEAwDJATcR6PB5zGqRcA_liNcwkqVJsShCzGQQKZC6kO4ZLc1zn3VtdGsyuuTV4PYHD3o5Os-euzia8rwPKPgcPSce7VOIC0J8i4cBuQhcLQ60i6uQLtjYA2pJEVhCkfEHpTz1uGm4xJPIqaZBtorj0iFr1-r15b0fHOjL3cGp07gChmH7BzmnAonIvQBXg-L63T86NkojH-1e8-g'
     // console.log("Token: ",token)
@@ -166,6 +191,23 @@ export default function DetailedChatView({route, navigation}) {
         },
         transports: ["websocket"],
     });
+
+    const { loading, error, data }  = useQuery(Queries.FETCH_SENDER_IDS)
+
+    if (loading) {
+        console.log("Isloading : ", loading)
+    }
+    
+    if (error) {
+        console.log("Error: ",error)
+        // alert("Error fetching participants for chat")
+    }
+
+    console.log("Data : ", data)
+
+    const senderIdDict = parseRegistrants(data)
+    console.log(getNameForId(senderIdDict, "9f471a0a-b99e-4d20-8465-a549fe29e4cb"))
+
     useEffect(() => {
         console.log("chatid inside: ", chatId)
         client.emit("chat.subscribe", chatId);
@@ -180,9 +222,16 @@ export default function DetailedChatView({route, navigation}) {
         
     })
 
-    client.on("chat.messages.send.ack", () => {
-        console.log("Chat message sent ")
+    client.on("chat.messages.send.ack", (msg) => {
+        console.log("Chat message sent ", msg)
+        populateMessages(msg)
     })
+
+    client.on("chat.messages.receive", (msg) => {
+        // console.info("Chat message received", msg);
+        console.log("received: ", msg)
+        populateMessages(msg)
+    });
 
     client.on("connection", () => {
         console.log("Connected")
@@ -218,9 +267,7 @@ export default function DetailedChatView({route, navigation}) {
 
     
     // socket.on("chat message", msg => {
-    //     const message = getMessageObjectFromResponse(msg)
         
-    //     // messages.push(message)
 
     //     setMessages(oldMessages => [...oldMessages, message])
     //     console.log(messages)
@@ -235,7 +282,7 @@ export default function DetailedChatView({route, navigation}) {
         const message = getMessageObject(chatId, chatMessage, userId)
         
         client.emit("chat.messages.send", message)
-        console.log("Sent?? "+uuid)
+        console.log("Sent?? "+message)
         // socket.emit('chat message', message);
         chatMessage = ''
 
@@ -244,6 +291,12 @@ export default function DetailedChatView({route, navigation}) {
         ));
     
       }
+
+    function populateMessages(msg) {
+        // const message = getMessageObjectFromResponse(JSON.parse(msg))
+        messages.push(msg)
+        console.log(messages)
+    }
 
 
     var chatMessage = ""
@@ -272,7 +325,7 @@ export default function DetailedChatView({route, navigation}) {
         })}
     </View> 
         <View style={styles.footer}>
-        <Button onPress={() => submitChatMessage("Test message")} title="Send Message"/>
+        <Button onPress={() => submitChatMessage("Test message from mobile")} title="Send Message"/>
         {/* <TextInput
           style={{height: 40, borderWidth: 1, top: 600}}
         //   autoCorrect={false}
