@@ -59,11 +59,11 @@ function getTimeFromDate(dateString) {
     return new Date(dateString).format("HH:MM")
 }
 
-export default function MessageView({messageInfo}) {
+export default function MessageView({messageInfo, senderName}) {
     return <View style={styles.outerView}>
         <View style={styles.rowContainer}>
             <Text style={styles.day} >{getDayFromDate(messageInfo.created_at)}</Text>
-            <Text style={styles.authorName} >{messageInfo.senderId}</Text>
+            <Text style={styles.authorName} >{senderName}</Text>
         </View>
         <View style={styles.rowContainer}>
             <Text style={styles.day}>{getTimeFromDate(messageInfo.created_at)}</Text>

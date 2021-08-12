@@ -121,11 +121,14 @@ function parseRegistrants(registrants){
     if (registrants){
         const userDict = {}
         const regs = registrants.registrant_Registrant
-        regs.map((person) => {
-            console.log(person)
-            console.log(JSON.stringify(person))
-            userDict[person.id] = person
-        })
+        for (let i=0; i<regs.length; i++) {
+            userDict[regs[i].id] = regs[i]
+        }
+        // regs.map((person) => {
+        //     console.log(person)
+        //     console.log(JSON.stringify(person))
+            
+        // })
 
         console.log(userDict)
         return userDict
@@ -192,9 +195,15 @@ export default function DetailedChatView({route, navigation}) {
         transports: ["websocket"],
     });
 
+    useEffect(() => {
+        console.log("chatid inside: ", chatId)
+        client.emit("chat.subscribe", chatId);
+    },[]);
+
     const { loading, error, data }  = useQuery(Queries.FETCH_SENDER_IDS)
 
     if (loading) {
+        return <ActivityIndicator/>
         console.log("Isloading : ", loading)
     }
     
@@ -206,12 +215,9 @@ export default function DetailedChatView({route, navigation}) {
     console.log("Data : ", data)
 
     const senderIdDict = parseRegistrants(data)
-    console.log(getNameForId(senderIdDict, "9f471a0a-b99e-4d20-8465-a549fe29e4cb"))
+    // console.log(getNameForId(senderIdDict, "9f471a0a-b99e-4d20-8465-a549fe29e4cb"))
 
-    useEffect(() => {
-        console.log("chatid inside: ", chatId)
-        client.emit("chat.subscribe", chatId);
-    },[]);
+
     // console.log("Auth : "+ JSON.stringify(client.auth))
     
     
@@ -224,7 +230,7 @@ export default function DetailedChatView({route, navigation}) {
 
     client.on("chat.messages.send.ack", (msg) => {
         console.log("Chat message sent ", msg)
-        populateMessages(msg)
+        
     })
 
     client.on("chat.messages.receive", (msg) => {
@@ -232,6 +238,11 @@ export default function DetailedChatView({route, navigation}) {
         console.log("received: ", msg)
         populateMessages(msg)
     });
+
+    client.on("connect_error", (err) => {
+        console.log(`connect_error due to ${err.message}`);
+      });
+
 
     client.on("connection", () => {
         console.log("Connected")
@@ -269,7 +280,7 @@ export default function DetailedChatView({route, navigation}) {
     // socket.on("chat message", msg => {
         
 
-    //     setMessages(oldMessages => [...oldMessages, message])
+    //     
     //     console.log(messages)
     //     chatMessagesObject.push(msg)
     //     console.log("Got back :" + msg)
@@ -282,7 +293,8 @@ export default function DetailedChatView({route, navigation}) {
         const message = getMessageObject(chatId, chatMessage, userId)
         
         client.emit("chat.messages.send", message)
-        console.log("Sent?? "+message)
+        // populateMessages(message.data)
+        console.log("Sent?? "+JSON.stringify(message))
         // socket.emit('chat message', message);
         chatMessage = ''
 
@@ -294,7 +306,8 @@ export default function DetailedChatView({route, navigation}) {
 
     function populateMessages(msg) {
         // const message = getMessageObjectFromResponse(JSON.parse(msg))
-        messages.push(msg)
+        setMessages(oldMessages => [...oldMessages, msg])
+        // messages.push(msg)
         console.log(messages)
     }
 
@@ -321,7 +334,11 @@ export default function DetailedChatView({route, navigation}) {
         {/* {chatMessages} */}
          <View style={styles.messages}>
         {messages && messages.map((msgInfo) => {
-            return <MessageView messageInfo={msgInfo}/>
+            // console.log("1,",messages)/
+            // console.log("2,",msgInfo)
+            // console.log("3,",senderIdDict[msgInfo.data.senderId])
+            // console.log("4,",senderIdDict[msgInfo.senderId].displayName)
+            return <MessageView messageInfo={msgInfo} senderName={senderIdDict[msgInfo.senderId].displayName}/>
         })}
     </View> 
         <View style={styles.footer}>
