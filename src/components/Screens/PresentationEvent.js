@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery } from '@apollo/client';
-import { ActivityIndicator, ScrollView, StyleSheet, Text, ActionSheetIOS, AsyncStorage, Button } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, Text, ActionSheetIOS, AsyncStorage, Button, View } from "react-native";
 import * as Constants from "../common/Constants";
 import * as Queries from "../common/GraphQLQueries";
 import AppButton from "../common/AppButton";
@@ -9,6 +9,7 @@ import EventElement from "./EventElement";
 import TagElement from "./TagElement";
 import {HeaderBackButton} from "@react-navigation/stack";
 import { useEffect, useState } from "react";
+import loginStyles from "../../styles/Login";
 
 
 const styles = StyleSheet.create({
@@ -130,7 +131,12 @@ export default function PresentationEvent({route, navigation}) {
     navigation.setOptions({
         headerTitle: event.title
     }) 
-    const authors = [1, 2, 3]
+    
+    if(!itemId){
+        return <View style={loginStyles.container}>
+        <Text> No elements to display</Text>
+    </View>
+    }
 
     console.log("Event id: "+event.itemId)
     const { loading, error, data }  = useQuery(Queries.GET_ITEM_ELEMENTS, {
