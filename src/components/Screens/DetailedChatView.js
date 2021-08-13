@@ -108,11 +108,12 @@ export default function DetailedChatView({route, navigation}) {
     useEffect(() => {
         
         return () => {
+            client.disconnect()
             console.log("Called while exiting view : ", )
-            client.off("chat.messages.send.ack")
-            client.off("chat.messages.receive")
-            client.off("chat.messages.send")
-            client.off("connect_error")
+            // client.off("chat.messages.send.ack")
+            // client.off("chat.messages.receive")
+            // client.off("chat.messages.send")
+            // client.off("connect_error")
         }
         
     },[]);
@@ -136,7 +137,6 @@ export default function DetailedChatView({route, navigation}) {
 
     client.on("chat.messages.send.ack", (msg) => {
         console.log("Chat message sent ", msg)
-        
     })
 
     client.on("chat.messages.receive", (msg) => {
@@ -146,6 +146,15 @@ export default function DetailedChatView({route, navigation}) {
 
     client.on("connect_error", (err) => {
         console.log(`connect_error due to ${err.message}`);
+      });
+    
+      client.on("disconnect",(disc) => {
+        console.log("client disconnect")
+      });
+
+      client.on("connect",(disc) => {
+        console.log("client connected")
+        
       });
 
     function submitChatMessage(chatMessage) {
@@ -165,7 +174,9 @@ export default function DetailedChatView({route, navigation}) {
 
     function populateMessages(msg) {
         setMessages(oldMessages => [...oldMessages, msg]) 
+        console.log("***************")
         console.log(messages)
+        console.log("***************")
     }
 
     function onTextChanged(text) {
