@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery } from '@apollo/client';
-import { ActivityIndicator, ScrollView, StyleSheet, Text, ActionSheetIOS, AsyncStorage, View, Button } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, Text, Alert, ActionSheetIOS, AsyncStorage, View, Button } from "react-native";
 import * as Constants from "../common/Constants";
 import * as Queries from "../common/GraphQLQueries";
 import MessageView from "./MessageView";
@@ -10,6 +10,8 @@ import io from "socket.io-client";
 import { graphql } from "graphql";
 import { useState } from "react";
 import { useEffect } from "react";
+import { TextInput } from "react-native-gesture-handler";
+import { socket } from "../common/Socket";
 
 const styles = StyleSheet.create({
     container: {
@@ -18,6 +20,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#F5FCFF',
     },
     footer : {
+        flex: 1,
         height: 100
     },
     messages: {
@@ -25,11 +28,11 @@ const styles = StyleSheet.create({
         height: "80%"
     },
     textInput: {
-        height: 40,
-        borderColor: "#000000",
-        borderBottomWidth: 1,
-        marginBottom: 36,
-        width: 100
+        borderWidth: 1,
+    borderColor: '#ccc',
+    fontSize: 16,
+    padding:10,
+    height:50,
       }
   });
 
@@ -80,6 +83,7 @@ function parseRegistrants(registrants){
     return {}
 }
 
+let count  = 0
 export default function DetailedChatView({route, navigation}) {
 
     const title = route.params.chatTitle
@@ -93,27 +97,27 @@ export default function DetailedChatView({route, navigation}) {
     const confId = route.params.confId
 
     const [messages, setMessages] = useState([])
-    const [chatText, setChatText] = useState("")
+    let [chatText, setChatText] = useState("")
 
     const chatId = route.params.chatId
-
+    
     const client = io(Config.WEBSOCKET_SERVER_URL, {
         auth: {
             token,
         },
         transports: ["websocket"],
     });
+    console.log("Client : ", client)
     client.emit("chat.subscribe", chatId);
 
     useEffect(() => {
-        
         return () => {
-            client.disconnect()
             console.log("Called while exiting view : ", )
-            // client.off("chat.messages.send.ack")
-            // client.off("chat.messages.receive")
-            // client.off("chat.messages.send")
-            // client.off("connect_error")
+            client.off("chat.messages.send.ack")
+            client.off("chat.messages.receive")
+            client.off("chat.messages.send")
+            client.off("connect_error")
+            // client.disconnect()
         }
         
     },[]);
@@ -135,6 +139,7 @@ export default function DetailedChatView({route, navigation}) {
 
     const senderId = getSenderIdForUserId(userId, senderIdDict)
 
+
     client.on("chat.messages.send.ack", (msg) => {
         console.log("Chat message sent ", msg)
     })
@@ -149,11 +154,13 @@ export default function DetailedChatView({route, navigation}) {
       });
     
       client.on("disconnect",(disc) => {
-        console.log("client disconnect")
+          count--
+        console.log("client disconnect : ", count)
       });
 
       client.on("connect",(disc) => {
-        console.log("client connected")
+          count++
+        console.log("client connected : ",count )
         
       });
 
@@ -180,7 +187,36 @@ export default function DetailedChatView({route, navigation}) {
     }
 
     function onTextChanged(text) {
-        setChatText(text)
+        // console.log("New text: ", text)
+        chatText = text
+        // setChatText(text)
+    }
+
+    function sendMessage(){
+        console.log("Send called")
+        console.log("Current chat text is : ", chatText)
+        if (chatText.length > 0) {
+            submitChatMessage(chatText)
+            setChatText("")
+        }
+    }
+
+    function showTextInputPopUp() {
+        Alert.prompt(
+            "Send a message",
+            "Enter the text that you want to send",
+            [
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+              },
+              {
+                text: "Send",
+                onPress: messageText => submitChatMessage(messageText)
+              }
+            ]
+          );
     }
     
 
@@ -191,7 +227,14 @@ export default function DetailedChatView({route, navigation}) {
         })}
     </View> 
         <View style={styles.footer}>
-        <Button onPress={() => submitChatMessage("Test message from mobile")} title="Send Message"/>
+            <TextInput 
+            style={styles.textInput}
+            // value={chatText}
+            returnKeyType='send'
+            onChangeText={(text) => onTextChanged(text)}
+            />
+            
+            <Button onPress={() => sendMessage() } title="Send Message"/>
         </View> 
 
       </ScrollView>
