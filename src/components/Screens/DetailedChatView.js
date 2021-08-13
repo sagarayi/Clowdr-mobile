@@ -1,6 +1,5 @@
-import React, {useMemo} from "react";
+import React from "react";
 import { useQuery } from '@apollo/client';
-import EventCalendar from 'react-native-events-calendar'
 import { ActivityIndicator, ScrollView, StyleSheet, Text, ActionSheetIOS, AsyncStorage, View, Button } from "react-native";
 import * as Constants from "../common/Constants";
 import * as Queries from "../common/GraphQLQueries";
@@ -17,6 +16,7 @@ import io from "socket.io-client";
 import { graphql } from "graphql";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useRef } from "react";
 
 const styles = StyleSheet.create({
     container: {
@@ -30,7 +30,14 @@ const styles = StyleSheet.create({
     messages: {
         flex: 1,
         height: "80%"
-    }
+    },
+    textInput: {
+        height: 40,
+        borderColor: "#000000",
+        borderBottomWidth: 1,
+        marginBottom: 36,
+        width: 100
+      }
   });
 
 
@@ -41,19 +48,21 @@ const fetchCurrentUserId= async() =>{
     return userId
   };
 
+function getSenderIdForUserId(userId, senderDict) {
+    if (senderDict){
+        for (let user in senderDict) {
+            console.log("Key : ", user)
+            console.log("Value : ", senderDict[user])
+            if (senderDict[user].userId === userId){
+                return user
+            }
+        }
+    }
+
+    return ""
+}
+
 function getMessageObject(chatId, message, senderId) {
-    // created_at: string;
-    // updated_at: string;
-    // type: Chat_MessageType_Enum;
-    // chatId: string;
-    // senderId: string | null | undefined;
-    // message: string;
-    // data: any;
-    // isPinned: boolean;
-    // duplicatedMessageSId?: string | null | undefined;
-    // systemId?: string | null | undefined;
-    // remoteServiceId?: string | null | undefined;
-    // sId: string;
     const sId = uuidv4();
     const newMsg = {
                     sId: sId,
@@ -61,10 +70,8 @@ function getMessageObject(chatId, message, senderId) {
                     updated_at: new Date().toISOString(),
                     chatId: chatId, 
                     message: message,
-                    senderId: "c370b4fb-be18-4d61-9e9d-3802e9d0d373",
-                    // uuidv4(),
-                    // 
-                    // senderId,
+                    senderId: senderId,
+                    // "c370b4fb-be18-4d61-9e9d-3802e9d0d373",
                     type: Constants.ChatMessageType.Message,
                     data: {},
                     isPinned: false
@@ -73,7 +80,6 @@ function getMessageObject(chatId, message, senderId) {
         op: "INSERT",
         data: newMsg,
     };
-    // console.log("Constructed object: "+ JSON.stringify(action))
     return action
 }
 
@@ -166,6 +172,7 @@ export default function DetailedChatView({route, navigation}) {
 
     console.log(client)
     const [messages, setMessages] = useState([])
+    const [chatText, setChatText] = useState("")
     // console.log("Messages : ", messages)
 
     // console.log(Config.WEBSOCKET_SERVER_URL)
@@ -194,10 +201,18 @@ export default function DetailedChatView({route, navigation}) {
         },
         transports: ["websocket"],
     });
+    client.emit("chat.subscribe", chatId);
 
     useEffect(() => {
-        console.log("chatid inside: ", chatId)
-        client.emit("chat.subscribe", chatId);
+        
+        return () => {
+            console.log("Called while exiting view : ", )
+            client.off("chat.messages.send.ack")
+            client.off("chat.messages.receive")
+            client.off("chat.messages.send")
+            client.off("connect_error")
+        }
+        
     },[]);
 
     const { loading, error, data }  = useQuery(Queries.FETCH_SENDER_IDS)
@@ -215,6 +230,8 @@ export default function DetailedChatView({route, navigation}) {
     console.log("Data : ", data)
 
     const senderIdDict = parseRegistrants(data)
+
+    const senderId = getSenderIdForUserId(userId, senderIdDict)
     // console.log(getNameForId(senderIdDict, "9f471a0a-b99e-4d20-8465-a549fe29e4cb"))
 
 
@@ -223,10 +240,10 @@ export default function DetailedChatView({route, navigation}) {
     
     
     // console.log(client.io.)
-    client.on("chat.subscribed", () => {
-        console.log("Chat subscribed ")
+    // client.on("chat.subscribed", () => {
+    //     console.log("Chat subscribed ")
         
-    })
+    // })
 
     client.on("chat.messages.send.ack", (msg) => {
         console.log("Chat message sent ", msg)
@@ -244,13 +261,13 @@ export default function DetailedChatView({route, navigation}) {
       });
 
 
-    client.on("connection", () => {
-        console.log("Connected")
-    })
+    // client.on("connection", () => {
+    //     console.log("Connected")
+    // })
 
-    client.on("chat:chat."+userId, () => {
-        console.log("Notification on")
-    })
+    // client.on("chat:chat."+userId, () => {
+    //     console.log("Notification on")
+    // })
 
 
     // client.emit("chat.subscribe", uuid);
@@ -290,7 +307,7 @@ export default function DetailedChatView({route, navigation}) {
     function submitChatMessage(chatMessage) {
         const uuid = uuidv4()
         
-        const message = getMessageObject(chatId, chatMessage, userId)
+        const message = getMessageObject(chatId, chatMessage, senderId)
         
         client.emit("chat.messages.send", message)
         // populateMessages(message.data)
@@ -311,8 +328,12 @@ export default function DetailedChatView({route, navigation}) {
         console.log(messages)
     }
 
+    function onTextChanged(text) {
+        setChatText(text)
+    }
 
-    var chatMessage = ""
+
+    
     var chatMessagesObject= []
 
     // var chatMessages = messages.map(msgInfo => (
@@ -322,6 +343,8 @@ export default function DetailedChatView({route, navigation}) {
     navigation.setOptions({
         headerTitle: title
     }) 
+
+    // const scrollViewRef = useRef()
 
     // console.log(chatMessages)
     
@@ -335,25 +358,20 @@ export default function DetailedChatView({route, navigation}) {
          <View style={styles.messages}>
         {messages && messages.map((msgInfo) => {
             // console.log("1,",messages)/
-            // console.log("2,",msgInfo)
+            console.log("2,",msgInfo)
             // console.log("3,",senderIdDict[msgInfo.data.senderId])
             // console.log("4,",senderIdDict[msgInfo.senderId].displayName)
+
             return <MessageView messageInfo={msgInfo} senderName={senderIdDict[msgInfo.senderId].displayName}/>
         })}
     </View> 
         <View style={styles.footer}>
+        {/* <TextInput 
+        placeholder="Username" 
+        style={styles.textInput}
+        value={chatText}
+        onChange={onTextChanged} /> */}
         <Button onPress={() => submitChatMessage("Test message from mobile")} title="Send Message"/>
-        {/* <TextInput
-          style={{height: 40, borderWidth: 1, top: 600}}
-        //   autoCorrect={false}
-        //   value={chatMessage}
-        //   onSubmitEditing={() => submitChatMessage()}
-        //   onChangeText={(chat) => {
-        //       console.log("new chat "+chat)
-        //       console.log("current "+chatMessage)
-        //     chatMessage = chatMessage + chat
-        //   }}
-        /> */}
         </View> 
 
       </ScrollView>
