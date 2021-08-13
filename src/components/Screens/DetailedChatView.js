@@ -3,12 +3,6 @@ import { useQuery } from '@apollo/client';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, ActionSheetIOS, AsyncStorage, View, Button } from "react-native";
 import * as Constants from "../common/Constants";
 import * as Queries from "../common/GraphQLQueries";
-import AppButton from "../common/AppButton";
-import EventAuthorView from "./EventAuthorView";
-import EventElement from "./EventElement";
-import TagElement from "./TagElement";
-import { SearchBar } from 'react-native-elements';
-import { TextInput } from "react-native-gesture-handler";
 import MessageView from "./MessageView";
 import { v4 as uuidv4 } from "uuid";
 import Config from "react-native-config";
@@ -16,7 +10,6 @@ import io from "socket.io-client";
 import { graphql } from "graphql";
 import { useState } from "react";
 import { useEffect } from "react";
-import { useRef } from "react";
 
 const styles = StyleSheet.create({
     container: {
@@ -39,14 +32,6 @@ const styles = StyleSheet.create({
         width: 100
       }
   });
-
-
-
-const fetchCurrentUserId= async() =>{
-    const userId = await AsyncStorage.getItem(Constants.USER_ID)
-    // console.log("User id : "+ userId)
-    return userId
-  };
 
 function getSenderIdForUserId(userId, senderDict) {
     if (senderDict){
@@ -83,117 +68,34 @@ function getMessageObject(chatId, message, senderId) {
     return action
 }
 
-const messages1 = [
-    {
-        sId: uuidv4(),
-        message: "Test message 1",
-        senderId: "Sender Name 1",
-        created_at: Date()
-    },
-    {
-        sId: uuidv4(),
-        message: "Test message 2",
-        senderId: "Sender Name 2",
-        created_at: Date()
-    }
-]
-
-function getMessageObjectFromResponse(response) {
-    const res = JSON.parse(response)
-    
-    if (!res || !res.data) {
-        return {}
-    }
-    const data = res.data
-    // console.log("response parsed  : "+ JSON.stringify(data))
-    // console.log("response parsed sid : "+ data.sId)
-    // console.log("response parsed message : "+ data.message)
-    // console.log("response parsed senderId : "+ data.senderId)
-    // console.log("response parsed created_at : "+ data.created_at)
-    const msg =     {
-        sId: data.sId,
-        message: data.message,
-        senderId: data.senderId,
-        // data.senderId,
-        created_at: data.created_at
-    }
-
-    return msg
-
-}
-
 function parseRegistrants(registrants){
-    console.log("Registrants : ",JSON.stringify(registrants))
     if (registrants){
         const userDict = {}
         const regs = registrants.registrant_Registrant
         for (let i=0; i<regs.length; i++) {
             userDict[regs[i].id] = regs[i]
         }
-        // regs.map((person) => {
-        //     console.log(person)
-        //     console.log(JSON.stringify(person))
-            
-        // })
-
-        console.log(userDict)
         return userDict
     }
     return {}
 }
 
-function getNameForId(registrants, id) {
-    return registrants[id].displayName
-}
-
 export default function DetailedChatView({route, navigation}) {
-    // var client = null
-    // useEffect(() => {
 
-    // })
-
-    // console.log("route : "+ JSON.stringify(route))
-    
     const title = route.params.chatTitle
+    navigation.setOptions({
+        headerTitle: title
+    }) 
 
-    // const socket = io("http://localhost:1234");
 
     const token = route.params.token
     const userId = route.params.userId
     const confId = route.params.confId
-    console.log("token : ", token)
-    // 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImJOeW9NQ1BtLWpzeWVFY2JPVDRkRyJ9.eyJodHRwczovL2hhc3VyYS5pby9qd3QvY2xhaW1zIjp7IngtaGFzdXJhLWRlZmF1bHQtcm9sZSI6InVzZXIiLCJ4LWhhc3VyYS1hbGxvd2VkLXJvbGVzIjpbInVzZXIiLCJ1bmF1dGhlbnRpY2F0ZWQiXSwieC1oYXN1cmEtdXNlci1pZCI6Imdvb2dsZS1vYXV0aDJ8MTEyNTMyMDQyMTc5MTM5MDQzMzYwIiwieC1oYXN1cmEtY29uZmVyZW5jZS1zbHVncyI6IntcIm1hYzIwMjFcIixcIm1hYzIwMjJcIn0ifSwiaXNzIjoiaHR0cHM6Ly9kZXYtampyYmZoeDUudXMuYXV0aDAuY29tLyIsInN1YiI6Imdvb2dsZS1vYXV0aDJ8MTEyNTMyMDQyMTc5MTM5MDQzMzYwIiwiYXVkIjpbImhhc3VyYSIsImh0dHBzOi8vZGV2LWpqcmJmaHg1LnVzLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE2Mjg1MjQzMTMsImV4cCI6MTYyODYxMDcxMywiYXpwIjoiQ2RJa2hidm1nRDRLbFFnV21TeXFpZW1kUUFiT2lQNloiLCJzY29wZSI6Im9wZW5pZCJ9.ZsVlNpZFhAAyB39R6BGLJMNZXBeHl87HXIesCcWh_GfInh0x5-cITPVLnaRWsiqRR8oAU397gNmK4uCSNaVKpGH5jCPvsWMbWfniW-ebq-6bclRbZnUYfzigtzypMMTU-STb4wEAwDJATcR6PB5zGqRcA_liNcwkqVJsShCzGQQKZC6kO4ZLc1zn3VtdGsyuuTV4PYHD3o5Os-euzia8rwPKPgcPSce7VOIC0J8i4cBuQhcLQ60i6uQLtjYA2pJEVhCkfEHpTz1uGm4xJPIqaZBtorj0iFr1-r15b0fHOjL3cGp07gChmH7BzmnAonIvQBXg-L63T86NkojH-1e8-g'
-    // console.log("Token: ",token)
-    // 
-    // fetchCurrentUserId()
-    // console.log("Access token : "+token)
 
-    // io.connect(Config.WEBSOCKET_SERVER_URL)
-
-    console.log(client)
     const [messages, setMessages] = useState([])
     const [chatText, setChatText] = useState("")
-    // console.log("Messages : ", messages)
-
-    // console.log(Config.WEBSOCKET_SERVER_URL)
-
-    const uuid = uuidv4()
-    
-    // client.emit('chat.messages.send', {});
-
-    // client.on("connect", () => {
-    //     console.log("Socket connected")
-    // })
 
     const chatId = route.params.chatId
-    // const server_url = "ws://localhost:3002"
-    // var ws = new WebSocket('ws://localhost:3002');
-    // console.log(ws)
-    // ws.send("Test")
-    // ws.onopen = () => {
-    //     // connection opened
-    //     console.log("It connected !!")
-    //   };
 
     const client = io(Config.WEBSOCKET_SERVER_URL, {
         auth: {
@@ -224,7 +126,6 @@ export default function DetailedChatView({route, navigation}) {
     
     if (error) {
         console.log("Error: ",error)
-        // alert("Error fetching participants for chat")
     }
 
     console.log("Data : ", data)
@@ -232,18 +133,6 @@ export default function DetailedChatView({route, navigation}) {
     const senderIdDict = parseRegistrants(data)
 
     const senderId = getSenderIdForUserId(userId, senderIdDict)
-    // console.log(getNameForId(senderIdDict, "9f471a0a-b99e-4d20-8465-a549fe29e4cb"))
-
-
-    // console.log("Auth : "+ JSON.stringify(client.auth))
-    
-    
-    
-    // console.log(client.io.)
-    // client.on("chat.subscribed", () => {
-    //     console.log("Chat subscribed ")
-        
-    // })
 
     client.on("chat.messages.send.ack", (msg) => {
         console.log("Chat message sent ", msg)
@@ -251,7 +140,6 @@ export default function DetailedChatView({route, navigation}) {
     })
 
     client.on("chat.messages.receive", (msg) => {
-        // console.info("Chat message received", msg);
         console.log("received: ", msg)
         populateMessages(msg)
     });
@@ -260,59 +148,13 @@ export default function DetailedChatView({route, navigation}) {
         console.log(`connect_error due to ${err.message}`);
       });
 
-
-    // client.on("connection", () => {
-    //     console.log("Connected")
-    // })
-
-    // client.on("chat:chat."+userId, () => {
-    //     console.log("Notification on")
-    // })
-
-
-    // client.emit("chat.subscribe", uuid);
-    
-
-    // console.log(client)
-
-    // const sId = uuidv4();
-    //         const newMsg: Message = {
-    //             sId,
-    //             created_at: new Date().toISOString(),
-    //             updated_at: new Date().toISOString(),
-    //             chatId, e6a44245-60d8-4bd8-88da-bd488ab93b8b
-    //             message,
-    //             senderId: this.globalState.registrant.id,
-    //             type,
-    //             data,
-    //             isPinned,
-    //         };
-    //         const action: Action<Message> = {
-    //             op: "INSERT",
-    //             data: newMsg,
-    //         };
-    //         socket.emit("chat.messages.send", action);
-
-    
-    // socket.on("chat message", msg => {
-        
-
-    //     
-    //     console.log(messages)
-    //     chatMessagesObject.push(msg)
-    //     console.log("Got back :" + msg)
-    //     //   this.setState({ chatMessages: [...this.state.chatMessages, msg]   
-    // });
-
     function submitChatMessage(chatMessage) {
         const uuid = uuidv4()
         
         const message = getMessageObject(chatId, chatMessage, senderId)
         
         client.emit("chat.messages.send", message)
-        // populateMessages(message.data)
         console.log("Sent?? "+JSON.stringify(message))
-        // socket.emit('chat message', message);
         chatMessage = ''
 
         chatMessages = messages.map(msgInfo => (
@@ -322,55 +164,22 @@ export default function DetailedChatView({route, navigation}) {
       }
 
     function populateMessages(msg) {
-        // const message = getMessageObjectFromResponse(JSON.parse(msg))
-        setMessages(oldMessages => [...oldMessages, msg])
-        // messages.push(msg)
+        setMessages(oldMessages => [...oldMessages, msg]) 
         console.log(messages)
     }
 
     function onTextChanged(text) {
         setChatText(text)
     }
-
-
-    
-    var chatMessagesObject= []
-
-    // var chatMessages = messages.map(msgInfo => (
-    //     <MessageView messageInfo={msgInfo}/>
-    //   ));
-    // console.log("Camer here ")
-    navigation.setOptions({
-        headerTitle: title
-    }) 
-
-    // const scrollViewRef = useRef()
-
-    // console.log(chatMessages)
     
 
     return <ScrollView style={styles.container}>
-            
-            {/* {chatMessagesObject.map((msg)=> {
-                return <Text style={{borderWidth: 2, top: 500}}>{msg}</Text>
-            })} */}
-        {/* {chatMessages} */}
          <View style={styles.messages}>
         {messages && messages.map((msgInfo) => {
-            // console.log("1,",messages)/
-            console.log("2,",msgInfo)
-            // console.log("3,",senderIdDict[msgInfo.data.senderId])
-            // console.log("4,",senderIdDict[msgInfo.senderId].displayName)
-
             return <MessageView messageInfo={msgInfo} senderName={senderIdDict[msgInfo.senderId].displayName}/>
         })}
     </View> 
         <View style={styles.footer}>
-        {/* <TextInput 
-        placeholder="Username" 
-        style={styles.textInput}
-        value={chatText}
-        onChange={onTextChanged} /> */}
         <Button onPress={() => submitChatMessage("Test message from mobile")} title="Send Message"/>
         </View> 
 
