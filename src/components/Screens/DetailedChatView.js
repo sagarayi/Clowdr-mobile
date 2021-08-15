@@ -192,7 +192,7 @@ export default function DetailedChatView({route, navigation}) {
 
     return <KeyboardAvoidingView
     behavior={Platform.OS === "ios" ? "padding" : "height"}
-    keyboardVerticalOffset={60}
+    keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
     style={styles.container} >
          <View style={styles.messages}>
              <MessageList 
