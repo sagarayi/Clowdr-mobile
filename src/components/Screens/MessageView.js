@@ -55,8 +55,7 @@ function getTimeFromDate(dateString) {
     var d = new Date(dateString);
     
     console.log(d.toTimeString())
-    return d.getHours() + ":" + d.getMinutes()
-    return new Date(dateString).format("HH:MM")
+    return (d.getHours() < 10 ? "0"+d.getHours() : d.getHours()) + ":" + (d.getMinutes() < 10 ? "0"+d.getMinutes() : d.getMinutes())
 }
 
 export default function MessageView({messageInfo, senderName}) {

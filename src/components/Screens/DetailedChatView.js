@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery } from '@apollo/client';
-import { ActivityIndicator, ScrollView, StyleSheet, Text, Alert, ActionSheetIOS, AsyncStorage, View, Button } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, Text, Alert, Image, TouchableOpacity, View, Button,KeyboardAvoidingView } from "react-native";
 import * as Constants from "../common/Constants";
 import * as Queries from "../common/GraphQLQueries";
 import MessageView from "./MessageView";
@@ -12,10 +12,10 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { TextInput } from "react-native-gesture-handler";
 import { socket } from "../common/Socket";
+import MessageList from "./MessageListView";
 
 const styles = StyleSheet.create({
     container: {
-    //   height: 400,
       flex: 1,
       backgroundColor: '#F5FCFF',
     },
@@ -29,11 +29,41 @@ const styles = StyleSheet.create({
     },
     textInput: {
         borderWidth: 1,
-    borderColor: '#ccc',
-    fontSize: 16,
-    padding:10,
-    height:50,
-      }
+        borderColor: '#ccc',
+        fontSize: 16,
+        padding:10,
+        height:50,
+        margin:10,
+        width: "80%",
+        backgroundColor: '#ffffff',
+        borderRadius: 10
+    },
+
+    rowContainer: {
+        flexDirection: 'row',
+        paddingBottom: 30,
+        backgroundColor: '#D9D9D9',
+    },
+
+    button: {
+        backgroundColor: '#58b655',
+        borderRadius: 20,
+        padding: 10,
+        marginTop: 10,
+        marginBottom: 10,
+        marginRight: 20,
+        height:50,
+        width:50,
+        shadowColor: '#303838',
+        shadowOffset: { width: 0, height: 5 },
+        shadowRadius: 10,
+        shadowOpacity: 0.35,
+    },
+    buttonIcon: {
+        height: 25,
+        width: 25,
+        padding:10,
+    }
   });
 
 function getSenderIdForUserId(userId, senderDict) {
@@ -83,7 +113,7 @@ function parseRegistrants(registrants){
     return {}
 }
 
-let count  = 0
+let count  = 0;
 export default function DetailedChatView({route, navigation}) {
 
     const title = route.params.chatTitle
@@ -96,31 +126,31 @@ export default function DetailedChatView({route, navigation}) {
     const userId = route.params.userId
     const confId = route.params.confId
 
-    const [messages, setMessages] = useState([])
-    let [chatText, setChatText] = useState("")
+    const [chatText, setChatText] = useState("")
 
     const chatId = route.params.chatId
     
+
     const client = io(Config.WEBSOCKET_SERVER_URL, {
         auth: {
             token,
         },
         transports: ["websocket"],
     });
-    console.log("Client : ", client)
-    client.emit("chat.subscribe", chatId);
 
     useEffect(() => {
         return () => {
             console.log("Called while exiting view : ", )
-            client.off("chat.messages.send.ack")
-            client.off("chat.messages.receive")
-            client.off("chat.messages.send")
-            client.off("connect_error")
+            // client.off("chat.messages.send.ack")
+            // client.off("chat.messages.receive")
+            // client.off("chat.messages.send")
+            // client.off("connect_error")
             // client.disconnect()
         }
         
     },[]);
+
+    
 
     const { loading, error, data }  = useQuery(Queries.FETCH_SENDER_IDS)
 
@@ -139,57 +169,15 @@ export default function DetailedChatView({route, navigation}) {
 
     const senderId = getSenderIdForUserId(userId, senderIdDict)
 
-
-    client.on("chat.messages.send.ack", (msg) => {
-        console.log("Chat message sent ", msg)
-    })
-
-    client.on("chat.messages.receive", (msg) => {
-        console.log("received: ", msg)
-        populateMessages(msg)
-    });
-
-    client.on("connect_error", (err) => {
-        console.log(`connect_error due to ${err.message}`);
-      });
-    
-      client.on("disconnect",(disc) => {
-          count--
-        console.log("client disconnect : ", count)
-      });
-
-      client.on("connect",(disc) => {
-          count++
-        console.log("client connected : ",count )
-        
-      });
-
     function submitChatMessage(chatMessage) {
-        const uuid = uuidv4()
-        
         const message = getMessageObject(chatId, chatMessage, senderId)
         
         client.emit("chat.messages.send", message)
         console.log("Sent?? "+JSON.stringify(message))
-        chatMessage = ''
-
-        chatMessages = messages.map(msgInfo => (
-            <MessageView messageInfo={msgInfo}/>
-        ));
-    
       }
 
-    function populateMessages(msg) {
-        setMessages(oldMessages => [...oldMessages, msg]) 
-        console.log("***************")
-        console.log(messages)
-        console.log("***************")
-    }
-
     function onTextChanged(text) {
-        // console.log("New text: ", text)
-        chatText = text
-        // setChatText(text)
+        setChatText(text)
     }
 
     function sendMessage(){
@@ -200,42 +188,30 @@ export default function DetailedChatView({route, navigation}) {
             setChatText("")
         }
     }
-
-    function showTextInputPopUp() {
-        Alert.prompt(
-            "Send a message",
-            "Enter the text that you want to send",
-            [
-              {
-                text: "Cancel",
-                onPress: () => console.log("Cancel Pressed"),
-                style: "cancel"
-              },
-              {
-                text: "Send",
-                onPress: messageText => submitChatMessage(messageText)
-              }
-            ]
-          );
-    }
     
 
-    return <ScrollView style={styles.container}>
+    return <KeyboardAvoidingView
+    behavior={Platform.OS === "ios" ? "padding" : "height"}
+    keyboardVerticalOffset={60}
+    style={styles.container} >
          <View style={styles.messages}>
-        {messages && messages.map((msgInfo) => {
-            return <MessageView messageInfo={msgInfo} senderName={senderIdDict[msgInfo.senderId].displayName}/>
-        })}
+             <MessageList 
+             socket={client} 
+             chatId={chatId}
+             senderIdDict={senderIdDict}/>
     </View> 
-        <View style={styles.footer}>
+        
+        <View style={styles.rowContainer}>
             <TextInput 
             style={styles.textInput}
-            // value={chatText}
-            returnKeyType='send'
+            value={chatText}
+            returnKeyType='done'
             onChangeText={(text) => onTextChanged(text)}
             />
-            
-            <Button onPress={() => sendMessage() } title="Send Message"/>
-        </View> 
-
-      </ScrollView>
+            <TouchableOpacity style={styles.button} onPress={()=>{sendMessage()}}>
+                <Image source={require(("../../../assets/send_icon.png"))} style={styles.buttonIcon}/>
+            </TouchableOpacity>
+            {/* <Button onPress={() => sendMessage() } title="Send Message"/> */}
+        </View>        
+        </KeyboardAvoidingView> 
 }

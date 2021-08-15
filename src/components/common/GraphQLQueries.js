@@ -127,6 +127,21 @@ query MyQuery {
   }
 }
 `
+
+export const FETCH_ALL_MESSAGES_FOR_CHAT = gql`
+query MyQuery($chatId: uuid!) {
+  chat_Message(where: {chatId: {_eq: $chatId}}) {
+    message
+    isPinned
+    created_at
+    chatId
+    senderId
+    type
+    updated_at
+    sId
+  }
+}
+`
 //  gql`
 // query RegistrantsById($conferenceId: uuid!) {
 //   registrant_Registrant(where: { conferenceId: { _eq: $conferenceId } }) {
