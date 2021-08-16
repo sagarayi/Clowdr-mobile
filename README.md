@@ -5,6 +5,7 @@
 ### Pre-requisite
 - Setup react native environment for iOS and Android - [Link](https://reactnative.dev/docs/environment-setup)
 - Install Cocoapods - [Link](https://guides.cocoapods.org/using/getting-started.html)
+- Auth0 setup - [Link](https://auth0.com/docs/quickstart/native/react-native/00-login)
 
 ### Steps for iOS
 - Clone this repository

@@ -22,6 +22,11 @@ export default function MessageList({socket, chatId, senderIdDict}){
         
         return () => {
             mounted = false
+            client.off("chat.messages.send.ack")
+            client.off("chat.messages.receive")
+            client.off("chat.messages.send")
+            client.off("connect_error")
+            client.disconnect()
         }
     } ,[])
 
@@ -46,6 +51,8 @@ export default function MessageList({socket, chatId, senderIdDict}){
 
     socket.on("connect_error", (err) => {
         console.log(`connect_error due to ${err.message}`);
+        alert(`Error connecting to the server. Reason : ${err.message}. Please navigate back to the previous screen and try again later.`);
+        socket.off("connect_error")
     });
     
     socket.on("disconnect",(disc) => {
@@ -57,6 +64,7 @@ export default function MessageList({socket, chatId, senderIdDict}){
         count++
         console.log("client connected : ",count )
     });
+
 
     return <ScrollView>
         {messages && messages.map((msgInfo) => {
