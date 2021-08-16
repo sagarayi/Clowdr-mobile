@@ -50,7 +50,7 @@ export default function PresentationEvent({route, navigation}) {
 
             }}/>
         ),
-        headerRight: () => (<Button onPress={showChatMenu} title="..."/>)
+        headerRight: () => (<Button onPress={navigateToChatScreen} title="Chat"/>)
     }) 
 
     const [currentAcessToken, setCurrentAcessToken] = useState('');
@@ -79,6 +79,19 @@ export default function PresentationEvent({route, navigation}) {
   };
 
 
+    function navigateToChatScreen(){
+        if (itemId && chatId) {
+            navigation.navigate(Constants.DETAILED_CHAT_VIEW, {
+                chatId: chatId,
+                chatTitle: title,
+                token: currentAcessToken,
+                userId: currentUserId,
+                confId: event.confId
+            })
+        } else {
+            alert("This event does not have a chat associated with it.")
+        }
+    }
     function showChatMenu() {
         ActionSheetIOS.showActionSheetWithOptions(
             {
