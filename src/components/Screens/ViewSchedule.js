@@ -53,7 +53,7 @@ export default function ViewSchedule({route, navigation}) {
 
             }}/>
         ),
-        headerRight: () => (<Button onPress={navigateToAllChatView} title="All chats"/>)
+        headerRight: null
     })
 
     function onEventTapped(event){

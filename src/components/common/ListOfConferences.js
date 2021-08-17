@@ -4,6 +4,7 @@ import { View, Text, AsyncStorage, Button, ActivityIndicator } from "react-nativ
 import AppButton from "../common/AppButton";
 import { useEffect, useState } from "react";
 import * as Queries from "../common/GraphQLQueries";
+import * as Constants from "../common/Constants";
 
 
 
@@ -19,7 +20,7 @@ export default function ListOfConferences(props) {
   },[]);
 
   const fetchCurrentUserId= async() =>{
-    const userId = await AsyncStorage.getItem(USER_ID)
+    const userId = await AsyncStorage.getItem(Constants.USER_ID)
     setCurrentUserId(userId)
   };
   
