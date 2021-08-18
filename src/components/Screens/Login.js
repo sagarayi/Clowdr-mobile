@@ -10,14 +10,16 @@
 
 import styles from "../../styles/Login";
 import * as Constants from "../common/Constants";
+import { LogBox } from 'react-native';
+
 
   const auth0 = new Auth0({
     domain: Config.AUTH0_DOMAIN,
     clientId: Config.AUTH0_CLIENT_ID
   });
-
+  LogBox.ignoreAllLogs();
   export default class Login extends Component {
-
+    
     state = {
         hasInitialized: false
       };

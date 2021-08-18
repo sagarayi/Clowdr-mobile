@@ -42,18 +42,21 @@ var initialDate = new Date()
 }
 
 export default function ViewSchedule({route, navigation}) {
+    
 
-    navigation.setOptions({
-        headerLeft: () => (
-            <HeaderBackButton
-            label={confName}
-             onPress={()=> {
-                events = []
-                navigation.pop()
-
-            }}/>
-        ),
-        headerRight: null
+    useEffect(() => {
+        navigation.setOptions({
+            headerLeft: () => (
+                <HeaderBackButton
+                label={confName}
+                 onPress={()=> {
+                    events = []
+                    navigation.pop()
+    
+                }}/>
+            ),
+            headerRight: null
+        })
     })
 
     function onEventTapped(event){

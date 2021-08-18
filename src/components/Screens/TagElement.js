@@ -45,8 +45,8 @@ export default function TagElement({confId}) {
     console.log(data)
 
     return <View>
-        { data.collection_Tag && data.collection_Tag.map((tag) => {
-            return <View style={styles.rectangle}>
+        { data.collection_Tag && data.collection_Tag.map((tag, index) => {
+            return <View style={styles.rectangle} key={tag.name+index}>
             <Chip label={tag.name} 
             backgroundColor={getColorForString(tag.colour)} 
             containerStyle={{borderWidth: 0}}

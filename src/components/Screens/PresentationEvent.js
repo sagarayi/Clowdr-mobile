@@ -208,14 +208,14 @@ export default function PresentationEvent({route, navigation}) {
     return <ScrollView>
         {loading && <ActivityIndicator size="large"/>}
         {itemData && <TagElement confId={event.confId}/>}
-        {itemData && videoItem && videoItem.map((video) => {
+        {itemData && videoItem && videoItem.map((video, index) => {
             const url = video.data[0].data.url
             if (url){
-                return <AppButton title={video.name} onPress={()=>{navigateToVideoStream(url)}}/>   
+                return <AppButton key={video.name+index} title={video.name} onPress={()=>{navigateToVideoStream(url)}}/>   
             }
         })}
-        {itemData && itemData.itemPeople && itemData.itemPeople.map((author) => {
-           return <EventAuthorView author={author}/>
+        {itemData && itemData.itemPeople && itemData.itemPeople.map((author, index) => {
+           return <EventAuthorView key={author.authorName+index} author={author}/>
         })}
         {itemData && <EventElement element={abstractItem} />}
         <Text>{Constants.lineBreak}</Text>
